@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Button x:Name="button" Content="KillPiga" HorizontalAlignment="Left" Margin="389,276,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="3.78,1.737" Click="button_Click"/>
+
     </Grid>
 </Window>
