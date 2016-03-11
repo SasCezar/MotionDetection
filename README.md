@@ -1,4 +1,4 @@
-# ${1:MotionDetection}
+# MotionDetection
 Motion detection based on sensors
 ## Installation
 TODO: Describe the installation process
