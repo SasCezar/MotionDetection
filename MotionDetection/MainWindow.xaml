@@ -1,17 +1,17 @@
-﻿<Window x:Class="WpfApplication2.MainWindow"
+﻿<Window x:Class="MotionDetection.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:oxy="http://oxyplot.org/wpf"
-        xmlns:local="clr-namespace:WpfApplication2"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:MotionDetection"
         xmlns:lvc="clr-namespace:LiveCharts;assembly=LiveCharts"
-        xmlns:wpf="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
-        Title="Example 2 (WPF)" Height="482.801" Width="718.617">
+        Title="Example 2 (WPF)" Height="482.801" Width="1025.213">
 
     <Grid>
-        <lvc:LineChart Margin="17,20,10,9.6">
+        <lvc:LineChart Margin="10,20,247.2,9.6">
             <lvc:LineChart.Series>
                 <lvc:LineSeries Values="1, 5, 8"/>
                 <lvc:LineSeries Values="3, 6, 2" />
             </lvc:LineChart.Series>
         </lvc:LineChart>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="826,38,0,0" VerticalAlignment="Top" Width="170" Height="79" Click="button_Click"/>
     </Grid>
 </Window>

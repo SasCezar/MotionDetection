@@ -22,12 +22,12 @@ namespace MotionDetection
 	{
 		public MainWindow()
 		{
-			
+			InitializeComponent();
 		}
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-    }
+		private void button_Click(object sender, RoutedEventArgs e)
+		{
+			DataReceiver.Start();
+		}
+	}
 }
