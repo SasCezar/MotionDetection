@@ -35,12 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OxyPlot, Version=2011.3.4094.38386, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
-      <HintPath>packages\OxyPlot.Wpf.2011.3.4094\lib\OxyPlot.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="OxyPlot.Wpf, Version=2011.3.4094.38387, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
-      <HintPath>packages\OxyPlot.Wpf.2011.3.4094\lib\OxyPlot.Wpf.dll</HintPath>
+    <Reference Include="LiveCharts, Version=0.6.4.0, Culture=neutral, PublicKeyToken=bc51a8d89213f1fa, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.0.6.4.0\lib\net452\LiveCharts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -94,8 +90,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include=".svn\all-wcprops" />
-    <None Include=".svn\entries" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
