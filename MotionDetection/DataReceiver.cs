@@ -111,61 +111,61 @@ namespace MotionDetection
 					array.Add(new List<double>()); // una lista per ogni sensore
 					t[x] = 5 + (52 * x);
 				}
-				while (true)
-				{
-					for (int i = 0; i < numSensori; i++)
-					{
-						byte[] temp = new byte[4];
-						for (int tr = 0; tr < 13; tr++)// 13 campi, 3 * 3 + 4
-						{
-							if (numSensori < 5)
-							{
-								temp[0] = pacchetto[t[i] + 3]; // lettura inversa
-								temp[1] = pacchetto[t[i] + 2];
-								temp[2] = pacchetto[t[i] + 1];
-								temp[3] = pacchetto[t[i]];
-							}
-							else
-							{
-								temp[0] = pacchetto[t[i] + 5];
-								temp[1] = pacchetto[t[i] + 4];
-								temp[2] = pacchetto[t[i] + 3];
-								temp[3] = pacchetto[t[i] + 2];
-							}
-							var valore = BitConverter.ToSingle(temp, 0); // conversione
-							array[i].Add(valore); // memorizzazione
-							t[i] += 4;
-						}
-					}
+			    do
+			    {
+			        for (int i = 0; i < numSensori; i++)
+			        {
+			            byte[] temp = new byte[4];
+			            for (int tr = 0; tr < 13; tr++) // 13 campi, 3 * 3 + 4
+			            {
+			                if (numSensori < 5)
+			                {
+			                    temp[0] = pacchetto[t[i] + 3]; // lettura inversa
+			                    temp[1] = pacchetto[t[i] + 2];
+			                    temp[2] = pacchetto[t[i] + 1];
+			                    temp[3] = pacchetto[t[i]];
+			                }
+			                else
+			                {
+			                    temp[0] = pacchetto[t[i] + 5];
+			                    temp[1] = pacchetto[t[i] + 4];
+			                    temp[2] = pacchetto[t[i] + 3];
+			                    temp[3] = pacchetto[t[i] + 2];
+			                }
+			                var valore = BitConverter.ToSingle(temp, 0); // conversione
+			                array[i].Add(valore); // memorizzazione
+			                t[i] += 4;
+			            }
+			        }
 
 
-					for (int x = 0; x < numSensori; x++)
-					{
-						t[x] = 5 + (52 * x);
-					}
+			        for (int x = 0; x < numSensori; x++)
+			        {
+			            t[x] = 5 + (52*x);
+			        }
 
-					for (int j = 0; j < numSensori; j++)
-					{
-						for (int tr = 0; tr < 13; tr++)
-						{
-							// esempio output su console
-							Console.Write(array[j][tr] + "; ");
-						}
-						Console.WriteLine();
-						array[j].RemoveRange(0, 13); // cancellazione dati
-					}
+			        for (int j = 0; j < numSensori; j++)
+			        {
+			            for (int tr = 0; tr < 13; tr++)
+			            {
+			                // esempio output su console
+			                Console.Write(array[j][tr] + "; ");
+			            }
+			            Console.WriteLine();
+			            array[j].RemoveRange(0, 13); // cancellazione dati
+			        }
 
-					Console.WriteLine();
+			        Console.WriteLine();
 
-					if (numSensori < 5) // lettura pacchetto seguente
-					{
-						pacchetto = reader.ReadBytes(byteToRead + 4);
-					}
-					else
-					{
-						pacchetto = reader.ReadBytes(byteToRead + 6);
-					}
-				}
+			        if (numSensori < 5) // lettura pacchetto seguente
+			        {
+			            pacchetto = reader.ReadBytes(byteToRead + 4);
+			        }
+			        else
+			        {
+			            pacchetto = reader.ReadBytes(byteToRead + 6);
+			        }
+			    } while (pacchetto.Length != 0);
 
 			}
 
