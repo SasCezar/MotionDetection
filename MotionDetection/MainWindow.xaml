@@ -6,11 +6,13 @@
         Title="Example 2 (WPF)" Height="482.801" Width="1025.213">
 
     <Grid>
-        <lvc:LineChart Margin="10,20,247.2,9.6">
-            <lvc:LineChart.Series>
-                <lvc:LineSeries Values="1, 5, 8"/>
-                <lvc:LineSeries Values="3, 6, 2" />
-            </lvc:LineChart.Series>
+        <lvc:LineChart Series="{Binding Series}" Margin="0,0,245.2,-0.4">
+            <lvc:LineChart.AxisX>
+                <lvc:Axis LabelFormatter="{Binding XFormatter}" Separator="{x:Static lvc:DefaultAxes.CleanSeparator}" />
+            </lvc:LineChart.AxisX>
+            <lvc:LineChart.AxisY>
+                <lvc:Axis LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+            </lvc:LineChart.AxisY>
         </lvc:LineChart>
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="826,38,0,0" VerticalAlignment="Top" Width="170" Height="79" Click="button_Click"/>
     </Grid>
