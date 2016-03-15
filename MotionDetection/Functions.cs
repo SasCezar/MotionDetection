@@ -68,7 +68,7 @@ namespace MotionDetection {
 			double B = 0;
 			double Avg = Average(A);
 			for (int i= 0; i < A.Length; i++) {
-				B = Math.Pow(A[i] - Avg, 2);
+				B += Math.Pow(A[i] - Avg, 2);
 			}
 			B = B / A.Length;
 			B = Math.Sqrt(B);
