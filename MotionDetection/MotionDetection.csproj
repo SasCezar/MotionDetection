@@ -75,6 +75,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CircularBufferMatrix.cs" />
+    <Compile Include="DataViewModel.cs" />
     <Compile Include="DataReceiver.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

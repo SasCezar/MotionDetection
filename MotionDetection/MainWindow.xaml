@@ -11,9 +11,12 @@
                 <lvc:Axis LabelFormatter="{Binding XFormatter}" Separator="{x:Static lvc:DefaultAxes.CleanSeparator}" />
             </lvc:LineChart.AxisX>
             <lvc:LineChart.AxisY>
-                <lvc:Axis LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                <lvc:Axis LabelFormatter="{Binding YFormatter}" />
             </lvc:LineChart.AxisY>
         </lvc:LineChart>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="826,38,0,0" VerticalAlignment="Top" Width="170" Height="79" Click="button_Click"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="795,38,0,0" VerticalAlignment="Top"
+                Width="201" Height="107" Click="button_Click" />
+        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="262" Margin="795,166,0,0" VerticalAlignment="Top"
+                 Width="201"/>
     </Grid>
 </Window>

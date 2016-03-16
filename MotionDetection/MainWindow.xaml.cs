@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using LiveCharts;
 
@@ -25,7 +26,7 @@ namespace MotionDetection
 			config.X(model => model.Time);
 
 			//now we create our series with this configuration
-			Series = new SeriesCollection(config)
+			Series = new SeriesCollection(config)   
 			{
 				new LineSeries {Values = new ChartValues<DataViewModel>(), PointRadius = 0}
 			};
@@ -50,14 +51,27 @@ namespace MotionDetection
 
 		private void button_Click(object sender, RoutedEventArgs e)
 		{
-			DataReceiver.Start();
+			var dataReceiver = new DataReceiver();
+			dataReceiver.NewDataReceived += OnDataReceived;
+			dataReceiver.Start();
 		}
-	}
 
+		public void OnDataReceived(object sender, DataEventArgs eventData)
+		{
+			// Stampa
 
-	public class DataViewModel
-	{
-		public float Value { get; set; }
-		public int Time { get; set; }
+			Dispatcher.Invoke(() =>
+			{
+				listBox.Items.Add(eventData.SensorData.Value + " " + eventData.SensorData.Time + " " + eventData.SensorData.SensorType);
+				foreach (var series in Series)
+				{
+					if (series.Values.Count > 500)
+					{
+						series.Values.RemoveAt(0);
+					}
+					series.Values.Add(eventData.SensorData);
+				}
+			});
+		}
 	}
 }

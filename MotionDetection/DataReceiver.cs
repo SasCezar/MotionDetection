@@ -6,9 +6,13 @@ using System.Threading;
 
 namespace MotionDetection
 {
+	public delegate void OnDataReceived(object sender, DataEventArgs eventArgs);
+
 	internal class DataReceiver
 	{
-		public static void Start()
+		public event OnDataReceived NewDataReceived;
+
+		public void Start()
 		{
 			var ep = new IPEndPoint(IPAddress.Any, 45555);
 
@@ -31,7 +35,7 @@ namespace MotionDetection
 		}
 
 
-		public static void Read(object obj)
+		public void Read(object obj)
 		{
 			var socket = (Socket) obj;
 			using (Stream stream = new NetworkStream(socket))
@@ -82,9 +86,7 @@ namespace MotionDetection
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-
-				CircularBufferMatrix<float> buffer = new CircularBufferMatrix<float>(13, numOfSensors, 25); // Creazione Buffer
-
+				CircularBufferMatrix<float> buffer = new CircularBufferMatrix<float>(13, numOfSensors, 250); // Creazione Buffer
 
 				int[] t = new int[maxNumberOfSensors];
 
@@ -99,42 +101,35 @@ namespace MotionDetection
 
 					for (var i = 0; i < numOfSensors; i++)
 					{
-						byte[] temp = new byte[4];
+						byte[] byteNumber = new byte[4];
 						for (var tr = 0; tr < 13; tr++) // 13 campi, 3 * 3 + 4
 						{
 							if (numOfSensors < 5)
 							{
-								temp[0] = packet[t[i] + 3]; // Lettura inversa
-								temp[1] = packet[t[i] + 2];
-								temp[2] = packet[t[i] + 1];
-								temp[3] = packet[t[i]];
+								byteNumber[0] = packet[t[i] + 3]; // Lettura inversa
+								byteNumber[1] = packet[t[i] + 2];
+								byteNumber[2] = packet[t[i] + 1];
+								byteNumber[3] = packet[t[i]];
 							}
 							else
 							{
-								temp[0] = packet[t[i] + 5];
-								temp[1] = packet[t[i] + 4];
-								temp[2] = packet[t[i] + 3];
-								temp[3] = packet[t[i] + 2];
+								byteNumber[0] = packet[t[i] + 5];
+								byteNumber[1] = packet[t[i] + 4];
+								byteNumber[2] = packet[t[i] + 3];
+								byteNumber[3] = packet[t[i] + 2];
 							}
-							var valore = BitConverter.ToSingle(temp, 0); // Conversione
+							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							buffer[tr, i, time] = valore; // Memorizzazione
-
-							// Stampa
-
-							MainWindow a = new MainWindow();
-							foreach (var series in a.Series)
+							var dataArgs = new DataEventArgs();
+							dataArgs.SensorData = new DataViewModel
 							{
-								if (series.Values.Count > 10)
-								{
-									series.Values.RemoveAt(0);
-								}
-								series.Values.Add(new DataViewModel
-								{
-									Value = valore,
-									Time = time
-								});
-							}
-							//
+								Value = valore,
+								Time = time,
+								SensorType = (SensorTypeEnum) tr
+							};
+
+							if (NewDataReceived != null)
+								NewDataReceived(this, dataArgs);
 
 							t[i] += 4;
 						}
