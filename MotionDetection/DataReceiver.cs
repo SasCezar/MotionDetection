@@ -64,7 +64,7 @@ namespace MotionDetection
 
 				byte[] data = reader.ReadBytes(byteToRead + 1); // Lettura dei dati
 
-				packet = (tem[2] != 0xFF) ? new byte[byteToRead + 4] : new byte[byteToRead + 6]; // Creazione packetto
+				packet = tem[2] != 0xFF ? new byte[byteToRead + 4] : new byte[byteToRead + 6]; // Creazione packetto
 
 				numOfSensors = (byteToRead - 2)/52; // Calcolo del numero di sensori
 				packet[0] = 0xFF; // Copia dei primi elementi
@@ -118,6 +118,24 @@ namespace MotionDetection
 							}
 							var valore = BitConverter.ToSingle(temp, 0); // Conversione
 							buffer[tr, i, time] = valore; // Memorizzazione
+
+							// Stampa
+
+							MainWindow a = new MainWindow();
+							foreach (var series in a.Series)
+							{
+								if (series.Values.Count > 10)
+								{
+									series.Values.RemoveAt(0);
+								}
+								series.Values.Add(new DataViewModel
+								{
+									Value = valore,
+									Time = time
+								});
+							}
+							//
+
 							t[i] += 4;
 						}
 					}
