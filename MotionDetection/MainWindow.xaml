@@ -6,7 +6,7 @@
         Title="Example 2 (WPF)" Height="482.801" Width="1025.213">
 
     <Grid>
-        <lvc:LineChart Series="{Binding Series}" Margin="0,0,245.2,-0.4">
+        <lvc:LineChart LegendLocation="Right" Series="{Binding Series}" Margin="0,0,245.2,-0.4">
             <lvc:LineChart.AxisX>
                 <lvc:Axis LabelFormatter="{Binding XFormatter}" Separator="{x:Static lvc:DefaultAxes.CleanSeparator}" />
             </lvc:LineChart.AxisX>

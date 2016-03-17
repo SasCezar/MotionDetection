@@ -102,7 +102,7 @@ namespace MotionDetection
 					for (var i = 0; i < numOfSensors; i++)
 					{
 						byte[] byteNumber = new byte[4];
-						for (var tr = 0; tr < 13; tr++) // 13 campi, 3 * 3 + 4
+						for (var tr = 0; tr < 1; tr++) // 13 campi, 3 * 3 + 4
 						{
 							if (numOfSensors < 5)
 							{
@@ -129,7 +129,11 @@ namespace MotionDetection
 							};
 
 							if (NewDataReceived != null)
-								NewDataReceived(this, dataArgs);
+							{
+								//NewDataReceived(this, dataArgs);
+								IAsyncResult res = NewDataReceived.BeginInvoke(this, dataArgs, null, null);
+								NewDataReceived.EndInvoke(res);
+							}
 
 							t[i] += 4;
 						}

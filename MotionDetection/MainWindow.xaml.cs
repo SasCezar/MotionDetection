@@ -53,6 +53,10 @@ namespace MotionDetection
 		{
 			var dataReceiver = new DataReceiver();
 			dataReceiver.NewDataReceived += OnDataReceived;
+			
+			//await Task.Factory.StartNew(() => dataReceiver.Start, TaskCreationOption.LongRunning);
+
+
 			dataReceiver.Start();
 		}
 
@@ -60,9 +64,11 @@ namespace MotionDetection
 		{
 			// Stampa
 
+
+
 			Dispatcher.Invoke(() =>
 			{
-				listBox.Items.Add(eventData.SensorData.Value + " " + eventData.SensorData.Time + " " + eventData.SensorData.SensorType);
+				//listBox.Items.Add(eventData.SensorData.Value + " " + eventData.SensorData.Time + " " + eventData.SensorData.SensorType);
 				foreach (var series in Series)
 				{
 					if (series.Values.Count > 500)
