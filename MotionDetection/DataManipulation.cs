@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MotionDetection {
-	class Functions {
+	class DataManipulation {
 		
 		public static double[,] Modulo(CircularBufferMatrix<double> A) {
 			double[,] B = new double[A.Height, A.Depth];
