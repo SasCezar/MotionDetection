@@ -86,7 +86,7 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-				CircularBufferMatrix<float> buffer = new CircularBufferMatrix<float>(13, numOfSensors, 250); // Creazione Buffer
+				CircularBufferMatrix<float> buffer = new CircularBufferMatrix<float>(13, numOfSensors, 750); // Creazione Buffer
 
 				int[] t = new int[maxNumberOfSensors];
 

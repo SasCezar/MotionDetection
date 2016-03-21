@@ -1,4 +1,6 @@
-﻿namespace MotionDetection.Models
+﻿using System.Diagnostics;
+
+namespace MotionDetection.Models
 {
 	public class CircularBufferMatrix<T>
 	{
@@ -36,10 +38,10 @@
 			set
 			{
 				_circularBuffer[i][j][x%Time] = value;
-				if (x%(1/3*Time) == 0)
+				if (x%(Time/3) == 0)
 				{
-					ReadIndex = (Time + x - (2/3*Time)) % Time;
-					WriteIndex = (ReadIndex + (1/3* Time)) % Time; // should be equal to x%Time
+					ReadIndex = (Time + x - (2*Time/3)) % Time;
+					WriteIndex = (ReadIndex + (Time/3)) % Time; // should be equal to x%Time
 				}
 			}
 		}
