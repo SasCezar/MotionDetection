@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MotionDetection
+namespace MotionDetection.Models
 {
 	public enum SensorTypeEnum
 	{

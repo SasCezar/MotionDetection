@@ -1,0 +1,7 @@
+﻿
+namespace MotionDetection
+{
+	class Main
+	{
+	}
+}

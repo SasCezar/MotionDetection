@@ -1,4 +1,4 @@
-﻿namespace MotionDetection
+﻿namespace MotionDetection.Models
 {
 	public class CircularBufferMatrix<T>
 	{

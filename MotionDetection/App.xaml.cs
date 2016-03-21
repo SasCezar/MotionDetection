@@ -25,7 +25,7 @@ namespace MotionDetection
 
 			// Step 3 - Load your windows but don't show it yet 
 			base.OnStartup(e);
-			var main = new MainWindow();
+			var main = new Views.MainWindow();
 
 			// Step 4 - Make sure that the splash screen lasts at least two seconds 
 			timer.Stop();

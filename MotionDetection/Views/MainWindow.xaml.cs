@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Threading;
 using System.Windows;
 using LiveCharts;
+using MotionDetection.Models;
 
-namespace MotionDetection
+namespace MotionDetection.Views
 {
 	/// <summary>
 	///     Interaction logic for MainWindow.xaml
@@ -62,13 +62,9 @@ namespace MotionDetection
 
 		public void OnDataReceived(object sender, DataEventArgs eventData)
 		{
-			// Stampa
-
-
-
 			Dispatcher.Invoke(() =>
 			{
-				//listBox.Items.Add(eventData.SensorData.Value + " " + eventData.SensorData.Time + " " + eventData.SensorData.SensorType);
+				listBox.Items.Add(eventData.SensorData.Value + " " + eventData.SensorData.Time + " " + eventData.SensorData.SensorType);
 				foreach (var series in Series)
 				{
 					if (series.Values.Count > 500)
