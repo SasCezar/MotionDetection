@@ -7,8 +7,8 @@
 
 		public CircularBufferMatrix(int sensorType, int sensorNumber, int time)
 		{
-			ReadIndex = 0;
-			WriteIndex = 0;
+			ReadIndex = -1; // Reading is not yet allowed
+			WriteIndex = 0; // you should start writing @ [0]
 			SensorType = sensorType;
 			SensorNumber = sensorNumber;
 			Time = time;
@@ -36,10 +36,10 @@
 			set
 			{
 				_circularBuffer[i][j][x%Time] = value;
-				if (x%(2/3*Time) == 0)
+				if (x%(1/3*Time) == 0)
 				{
-					ReadIndex = (ReadIndex + 1/3*Time)%Time;
-					WriteIndex = (WriteIndex + 1/3*Time)%Time;
+					ReadIndex = (Time + x - (2/3*Time)) % Time;
+					WriteIndex = (ReadIndex + (1/3* Time)) % Time; // should be equal to x%Time
 				}
 			}
 		}
