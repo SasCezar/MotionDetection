@@ -42,6 +42,7 @@ namespace MotionDetection.Models
 				{
 					ReadIndex = (Time + x - (2*Time/3)) % Time;
 					WriteIndex = (ReadIndex + (Time/3)) % Time; // should be equal to x%Time
+					Debug.WriteLine("Updated ReadIndex="+ReadIndex+", WriteIndex="+WriteIndex);
 				}
 			}
 		}
