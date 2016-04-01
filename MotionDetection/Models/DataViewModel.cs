@@ -16,7 +16,7 @@ namespace MotionDetection.Models
 		Quaternion0,
 		Quaternion1,
 		Quaternion2,
-		Quaternion3,
+		Quaternion3
 	}
 
 	public class DataViewModel

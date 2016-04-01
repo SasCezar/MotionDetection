@@ -1,32 +1,28 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
-using LiveCharts.CoreComponents;
-using MotionDetection.Models;
+﻿using System.Windows;
 using MotionDetection.ViewModels;
 
 namespace MotionDetection.Views
 {
-    /// <summary>
-    ///     Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
-    {
-        public MainWindow(ViewModelWindow ViewModel)
-        {
-            InitializeComponent();
+	/// <summary>
+	///     Interaction logic for MainWindow.xaml
+	/// </summary>
+	public partial class MainWindow : Window
+	{
+		public MainWindow(ViewModelWindow ViewModel)
+		{
+			InitializeComponent();
 
 
-            //Don't forget DataContext so we can bind these properties.
-            DataContext = ViewModel;
-        }
+			//Don't forget DataContext so we can bind these properties.
+			DataContext = ViewModel;
+		}
 
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            await Task.Factory.StartNew(() => dataReceiver.Start, TaskCreationOption.LongRunning);
-        }
+		private void button_Click(object sender, RoutedEventArgs e)
+		{
+		}
 
-     /*   public void OnDataReceived(object sender, DataEventArgs eventData)
+		/*   public void OnDataReceived(object sender, DataEventArgs eventData)
         {
             Dispatcher.Invoke(() =>
             {
@@ -42,5 +38,5 @@ namespace MotionDetection.Views
                 }
             });
         }*/
-    }
+	}
 }

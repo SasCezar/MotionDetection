@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -11,16 +10,17 @@ namespace MotionDetection.Models
 
 	public class DataReceiver
 	{
+		private TcpListener listener;
 		public event OnDataReceived NewDataReceived;
 
-		public void Start()
+		public async void Start()
 		{
 			var ep = new IPEndPoint(IPAddress.Any, 45555);
 
 			// Crea una socket di tipo TCP
 			// per creare una connessione UDP occorre usare
 			// esplicitamente la new Socket()
-			var listener = new TcpListener(ep);
+			listener = new TcpListener(ep);
 			listener.Start();
 
 			var socket = listener.AcceptSocket(); // blocca
@@ -36,14 +36,14 @@ namespace MotionDetection.Models
 		}
 
 
-		public void Read(object obj)
+		public async void Read(object obj)
 		{
 			var socket = (Socket) obj;
 			using (Stream stream = new NetworkStream(socket))
 			using (var reader = new BinaryReader(stream))
 			{
-				byte[] len = new byte[2];
-				byte[] tem = new byte[3];
+				var len = new byte[2];
+				var tem = new byte[3];
 				int byteToRead;
 				byte[] packet;
 				int numOfSensors;
@@ -53,7 +53,7 @@ namespace MotionDetection.Models
 				{
 					tem[0] = tem[1];
 					tem[1] = tem[2];
-					byte[] read = reader.ReadBytes(1);
+					var read = reader.ReadBytes(1);
 					tem[2] = read[0];
 				}
 				if (tem[2] != 0xFF) // Modalità normale
@@ -67,7 +67,7 @@ namespace MotionDetection.Models
 					byteToRead = len[0]*256 + len[1]; // Byte da leggere
 				}
 
-				byte[] data = reader.ReadBytes(byteToRead + 1); // Lettura dei dati
+				var data = reader.ReadBytes(byteToRead + 1); // Lettura dei dati
 
 				packet = tem[2] != 0xFF ? new byte[byteToRead + 4] : new byte[byteToRead + 6]; // Creazione packetto
 
@@ -87,9 +87,9 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-				CircularBufferMatrix<double> buffer = new CircularBufferMatrix<double>(13, numOfSensors, 750); // Creazione Buffer
+				var buffer = new CircularBufferMatrix<double>(13, numOfSensors, 750); // Creazione Buffer
 
-				int[] t = new int[maxNumberOfSensors];
+				var t = new int[maxNumberOfSensors];
 
 				var time = 0;
 
@@ -102,7 +102,7 @@ namespace MotionDetection.Models
 
 					for (var i = 0; i < numOfSensors; i++)
 					{
-						byte[] byteNumber = new byte[4];
+						var byteNumber = new byte[4];
 						for (var tr = 0; tr < 1; tr++) // 13 campi, 3 * 3 + 4
 						{
 							if (numOfSensors < 5)
@@ -129,12 +129,7 @@ namespace MotionDetection.Models
 								SensorType = (SensorTypeEnum) tr
 							};
 
-							if (NewDataReceived != null)
-							{
-								//NewDataReceived(this, dataArgs);
-								IAsyncResult res = NewDataReceived.BeginInvoke(this, dataArgs, null, null);
-								NewDataReceived.EndInvoke(res);
-							}
+							NewDataReceived?.Invoke(this, dataArgs);
 
 							t[i] += 4;
 						}

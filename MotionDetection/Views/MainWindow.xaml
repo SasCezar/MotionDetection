@@ -24,7 +24,7 @@
                 Margin="795,38,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Click="button_Click"
+                Command="{Binding Command}"
                 Content="Button" />
         <ListBox x:Name="listBox"
                  Width="201"

@@ -40,9 +40,9 @@ namespace MotionDetection.Models
 				_circularBuffer[i][j][x%Time] = value;
 				if (x%(Time/3) == 0)
 				{
-					ReadIndex = (Time + x - (2*Time/3)) % Time;
-					WriteIndex = (ReadIndex + (Time/3)) % Time; // should be equal to x%Time
-					Debug.WriteLine("Updated ReadIndex="+ReadIndex+", WriteIndex="+WriteIndex);
+					ReadIndex = (Time + x - 2*Time/3)%Time;
+					WriteIndex = (ReadIndex + Time/3)%Time; // should be equal to x%Time
+					Debug.WriteLine("Updated ReadIndex=" + ReadIndex + ", WriteIndex=" + WriteIndex);
 				}
 			}
 		}
