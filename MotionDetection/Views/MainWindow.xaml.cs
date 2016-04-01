@@ -8,18 +8,11 @@ namespace MotionDetection.Views
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		public MainWindow(ViewModelWindow ViewModel)
+		public MainWindow(ViewModelWindow viewModel)
 		{
 			InitializeComponent();
-
-
 			//Don't forget DataContext so we can bind these properties.
-			DataContext = ViewModel;
-		}
-
-
-		private void button_Click(object sender, RoutedEventArgs e)
-		{
+			DataContext = viewModel;
 		}
 
 		/*   public void OnDataReceived(object sender, DataEventArgs eventData)

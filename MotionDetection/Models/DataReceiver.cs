@@ -10,20 +10,19 @@ namespace MotionDetection.Models
 
 	public class DataReceiver
 	{
-		private TcpListener listener;
 		public event OnDataReceived NewDataReceived;
 
-		public async void Start()
+		public void Start()
 		{
 			var ep = new IPEndPoint(IPAddress.Any, 45555);
 
 			// Crea una socket di tipo TCP
 			// per creare una connessione UDP occorre usare
 			// esplicitamente la new Socket()
-			listener = new TcpListener(ep);
+		    var	listener = new TcpListener(ep);
 			listener.Start();
 
-			var socket = listener.AcceptSocket(); // blocca
+			var socket = listener.AcceptSocket(); // Blocca
 			//Client(socket);
 
 			// ParametrizedThreadStart è un delegate
@@ -32,11 +31,11 @@ namespace MotionDetection.Models
 			var socketClientThread = new Thread(Read);
 			socketClientThread.Start(socket);
 
-			// esegue tutto (blocca)
+			// Esegue tutto (blocca)
 		}
 
 
-		public async void Read(object obj)
+		public void Read(object obj)
 		{
 			var socket = (Socket) obj;
 			using (Stream stream = new NetworkStream(socket))
@@ -45,8 +44,6 @@ namespace MotionDetection.Models
 				var len = new byte[2];
 				var tem = new byte[3];
 				int byteToRead;
-				byte[] packet;
-				int numOfSensors;
 				const int maxNumberOfSensors = 10;
 
 				while (!(tem[0] == 0xFF && tem[1] == 0x32)) // Cerca la sequenza FF-32
@@ -62,16 +59,15 @@ namespace MotionDetection.Models
 				}
 				else // Modalità extended-length
 				{
-					len = new byte[2];
 					len = reader.ReadBytes(2);
 					byteToRead = len[0]*256 + len[1]; // Byte da leggere
 				}
 
 				var data = reader.ReadBytes(byteToRead + 1); // Lettura dei dati
 
-				packet = tem[2] != 0xFF ? new byte[byteToRead + 4] : new byte[byteToRead + 6]; // Creazione packetto
+				var packet = tem[2] != 0xFF ? new byte[byteToRead + 4] : new byte[byteToRead + 6];
 
-				numOfSensors = (byteToRead - 2)/52; // Calcolo del numero di sensori
+				var numOfSensors = (byteToRead - 2)/52;
 				packet[0] = 0xFF; // Copia dei primi elementi
 				packet[1] = 0x32;
 				packet[2] = tem[2];
@@ -121,12 +117,14 @@ namespace MotionDetection.Models
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							buffer[tr, i, time] = valore; // Memorizzazione
-							var dataArgs = new DataEventArgs();
-							dataArgs.SensorData = new DataViewModel
+							var dataArgs = new DataEventArgs
 							{
-								Value = valore,
-								Time = time,
-								SensorType = (SensorTypeEnum) tr
+								SensorData = new DataViewModel
+								{
+									Value = valore,
+									Time = time,
+									SensorType = (SensorTypeEnum) tr
+								}
 							};
 
 							NewDataReceived?.Invoke(this, dataArgs);
