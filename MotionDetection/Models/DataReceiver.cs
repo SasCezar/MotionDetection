@@ -9,7 +9,7 @@ namespace MotionDetection.Models
 {
 	public delegate void OnDataReceived(object sender, DataEventArgs eventArgs);
 
-	internal class DataReceiver
+	public class DataReceiver
 	{
 		public event OnDataReceived NewDataReceived;
 

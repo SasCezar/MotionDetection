@@ -4,9 +4,16 @@ using MotionDetection.Views;
 
 namespace MotionDetection
 {
-	class Main
+	public class Main
 	{
-        ViewModelWindow ViewModel = new ViewModelWindow();
-        MainWindow Form = new MainWindow(ViewModel);
+	    private ViewModelWindow ViewModel;
+	    private MainWindow Form;
+
+        public Main()
+	    {
+            ViewModel = new ViewModelWindow();
+            Form = new MainWindow(ViewModel);
+        }
+       
 	}
 }

@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Windows;
 using LiveCharts;
+using MotionDetection.Commands;
 using MotionDetection.Models;
 
 namespace MotionDetection.ViewModels
 {
     public class ViewModelWindow
     {
+        public DataReceiver Receiver;
+        public ConnectionCommand Command;
         public SeriesCollection Series { get; set; }
         public Func<double, string> YFormatter { get; set; }
         public Func<double, string> XFormatter { get; set; }
 
         public ViewModelWindow()
         {
+            Receiver = new DataReceiver();
+            Command = new ConnectionCommand(Receiver);
             var config = new SeriesConfiguration<DataViewModel>();
 
             config.Y(model => model.Value);
