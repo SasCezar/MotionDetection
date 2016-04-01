@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Threading;
 using LiveCharts;
 using MotionDetection.Annotations;
 using MotionDetection.Commands;
@@ -15,6 +17,7 @@ namespace MotionDetection.ViewModels
 		public ViewModelWindow()
 		{
 			Receiver = new DataReceiver();
+			Receiver.NewDataReceived += OnDataReceived;
 			Command = new ConnectionCommand(Receiver);
 			var config = new SeriesConfiguration<DataViewModel>();
 
@@ -34,6 +37,16 @@ namespace MotionDetection.ViewModels
 
 		public ConnectionCommand Command { get; set; }
 		public SeriesCollection Series { get; set; }
+
+		public DataViewModel SensorData
+		{
+			set
+			{
+	
+				Series[0].Values.Add(value);
+				OnPropertyChanged(nameof(Series));
+			}
+		}
 		public Func<double, string> YFormatter { get; set; }
 		public Func<double, string> XFormatter { get; set; }
 
@@ -44,5 +57,10 @@ namespace MotionDetection.ViewModels
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
+
+		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
+		{
+			SensorData = sensorArgs.SensorData;
+		} 
 	}
 }
