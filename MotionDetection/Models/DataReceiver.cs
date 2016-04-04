@@ -8,30 +8,21 @@ namespace MotionDetection.Models
 {
 	public delegate void OnDataReceived(object sender, DataEventArgs eventArgs);
 
+	public delegate void MyDataHandler(object sender, EventArgs eventArgs);
+
 	public class DataReceiver
 	{
 		public event OnDataReceived NewDataReceived;
+		public event MyDataHandler NewData;
 
 		public void Start()
 		{
 			var ep = new IPEndPoint(IPAddress.Any, 45555);
-
-			// Crea una socket di tipo TCP
-			// per creare una connessione UDP occorre usare
-			// esplicitamente la new Socket()
 			var listener = new TcpListener(ep);
 			listener.Start();
-
-			var socket = listener.AcceptSocket(); // Blocca
-			//Client(socket);
-
-			// ParametrizedThreadStart è un delegate
-			// Client è un delegate- handler
-
+			var socket = listener.AcceptSocket();
 			var socketClientThread = new Thread(Read);
 			socketClientThread.Start(socket);
-
-			// Esegue tutto (blocca)
 		}
 
 
@@ -96,7 +87,7 @@ namespace MotionDetection.Models
 						t[x] = 5 + 52*x;
 					}
 
-					for (var i = 0; i < numOfSensors; i++)
+					for (var i = 0; i < numOfSensors; i += numOfSensors)
 					{
 						var byteNumber = new byte[4];
 						for (var tr = 0; tr < 1; tr++) // 13 campi, 3 * 3 + 4
@@ -117,6 +108,7 @@ namespace MotionDetection.Models
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							buffer[tr, i, time] = valore; // Memorizzazione
+
 							var dataArgs = new DataEventArgs
 							{
 								SensorData = new DataViewModel
@@ -128,7 +120,6 @@ namespace MotionDetection.Models
 							};
 
 							NewDataReceived?.Invoke(this, dataArgs);
-
 
 							t[i] += 4;
 						}

@@ -2,14 +2,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:local="clr-namespace:MotionDetection.ViewModels"
         Title="Example 2  (WPF)"
         Width="1025.213"
         Height="482.801">
- 
+
+    <Window.DataContext>
+        <local:ViewModelWindow/>
+    </Window.DataContext>
     <Grid>
-        <oxy:Plot Title="{Binding Title}" Margin="0,0,306.2,-0.4">
+        <oxy:Plot x:Name="Grafico"  Title="{Binding Title}" Margin="0,0,306.2,-0.4" InvalidateFlag="{Binding InvFlag}">
+            <oxy:Plot.Axes>
+                <oxy:LinearAxis Position="Bottom" Minimum="0" Maximum="500" />
+                    <oxy:LinearAxis Position="Left" Minimum="-10" Maximum="10"/>
+            </oxy:Plot.Axes>
             <oxy:Plot.Series>
-                <oxy:LineSeries ItemsSource="{Binding Points}" />
+                <oxy:LineSeries ItemsSource="{Binding Points, Mode=OneWay}" Color="Blue" StrokeThickness="5"/>
             </oxy:Plot.Series>
         </oxy:Plot>
         <Button x:Name="button"

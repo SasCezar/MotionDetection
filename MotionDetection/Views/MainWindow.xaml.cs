@@ -14,22 +14,5 @@ namespace MotionDetection.Views
 			//Don't forget DataContext so we can bind these properties.
 			DataContext = viewModel;
 		}
-
-		/*   public void OnDataReceived(object sender, DataEventArgs eventData)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                listBox.Items.Add(eventData.SensorData.Value + " " + eventData.SensorData.Time + " " +
-                                  eventData.SensorData.SensorType);
-                foreach (var series in Series)
-                {
-                    if (series.Values.Count > 500)
-                    {
-                        series.Values.RemoveAt(0);
-                    }
-                    series.Values.Add(eventData.SensorData);
-                }
-            });
-        }*/
 	}
 }
