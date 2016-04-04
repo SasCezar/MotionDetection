@@ -1,22 +1,17 @@
 ﻿<Window x:Class="MotionDetection.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:lvc="clr-namespace:LiveCharts;assembly=LiveCharts"
+        xmlns:oxy="http://oxyplot.org/wpf"
         Title="Example 2  (WPF)"
         Width="1025.213"
         Height="482.801">
-
+ 
     <Grid>
-        <lvc:LineChart Margin="0,0,245.2,-0.4"
-                       LegendLocation="Right"
-                       Series="{Binding Series}">
-            <lvc:LineChart.AxisX>
-                <lvc:Axis LabelFormatter="{Binding XFormatter}" Separator="{x:Static lvc:DefaultAxes.CleanSeparator}" />
-            </lvc:LineChart.AxisX>
-            <lvc:LineChart.AxisY>
-                <lvc:Axis LabelFormatter="{Binding YFormatter}" />
-            </lvc:LineChart.AxisY>
-        </lvc:LineChart>
+        <oxy:Plot Title="{Binding Title}" Margin="0,0,306.2,-0.4">
+            <oxy:Plot.Series>
+                <oxy:LineSeries ItemsSource="{Binding Points}" />
+            </oxy:Plot.Series>
+        </oxy:Plot>
         <Button x:Name="button"
                 Width="201"
                 Height="107"

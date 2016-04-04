@@ -3,8 +3,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace MotionDetection.Models
 {
@@ -21,7 +19,7 @@ namespace MotionDetection.Models
 			// Crea una socket di tipo TCP
 			// per creare una connessione UDP occorre usare
 			// esplicitamente la new Socket()
-		    var	listener = new TcpListener(ep);
+			var listener = new TcpListener(ep);
 			listener.Start();
 
 			var socket = listener.AcceptSocket(); // Blocca
