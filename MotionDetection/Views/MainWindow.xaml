@@ -11,7 +11,8 @@
         <local:ViewModelWindow/>
     </Window.DataContext>
     <Grid>
-        <oxy:Plot x:Name="Grafico"  Title="{Binding Title}" Margin="0,0,306.2,-0.4" InvalidateFlag="{Binding InvFlag}">
+        <oxy:PlotView Model="{Binding MyModel}"/>
+       <!-- <oxy:Plot x:Name="Grafico"  Title="{Binding Title}" Margin="0,0,306.2,-0.4" InvalidateFlag="{Binding InvFlag}">
             <oxy:Plot.Axes>
                 <oxy:LinearAxis Position="Bottom" Minimum="0" Maximum="500" />
                     <oxy:LinearAxis Position="Left" Minimum="-10" Maximum="10"/>
@@ -19,7 +20,7 @@
             <oxy:Plot.Series>
                 <oxy:LineSeries ItemsSource="{Binding Points, Mode=OneWay}" Color="Blue" StrokeThickness="5"/>
             </oxy:Plot.Series>
-        </oxy:Plot>
+        </oxy:Plot> -->
         <Button x:Name="button"
                 Width="201"
                 Height="107"

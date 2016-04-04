@@ -14,5 +14,6 @@ namespace MotionDetection.Views
 			//Don't forget DataContext so we can bind these properties.
 			DataContext = viewModel;
 		}
+
 	}
 }
