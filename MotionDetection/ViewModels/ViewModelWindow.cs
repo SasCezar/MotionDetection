@@ -18,6 +18,7 @@ namespace MotionDetection.ViewModels
 
 	    private LineSeries Series;
 
+
         public ViewModelWindow()
 		{
 			Receiver = new DataReceiver();
@@ -34,12 +35,15 @@ namespace MotionDetection.ViewModels
 
             MyModel.Axes.Add(new LinearAxis()
             {
-                Position = AxisPosition.Bottom
+                Position = AxisPosition.Bottom,
+                Minimum = 0
+
             });
             
             MyModel.Axes.Add(new LinearAxis()
             {
                 Position = AxisPosition.Left
+
             });
 
             Series = new LineSeries()
@@ -59,7 +63,7 @@ namespace MotionDetection.ViewModels
 		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
 		{
 			var sensorData = sensorArgs.SensorData;
-			//Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
+            //Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
             Series.Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
 		    ++Counter;
 		    if (Counter%30 == 0)
