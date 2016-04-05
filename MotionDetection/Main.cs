@@ -9,7 +9,7 @@ namespace MotionDetection
 	{
 		private MainWindow Form;
 		private ViewModelWindow _viewModel;
-	    private CircularBufferMatrix<double> Buffer;
+	    private CircularBuffer3DMatrix<double> _buffer3D;
 
         public Main()
 		{
@@ -17,12 +17,12 @@ namespace MotionDetection
 			Form = new MainWindow(_viewModel);
 			Form.Show();
 			/* Test - Do Not Remove
-			CircularBufferMatrix<double> matrice = new CircularBufferMatrix<double>(5, 5, 5) {[1, 1, 1] = 50.5};
+			CircularBuffer3DMatrix<double> matrice = new CircularBuffer3DMatrix<double>(5, 5, 5) {[1, 1, 1] = 50.5};
 			double[] ou = matrice.GetSubArray(1, 1);
 			ou[1] = 10;
 			MessageBox.Show("" + matrice[1,1,1] + " " + ou[1]);
 			*/
-            Buffer = new CircularBufferMatrix<double>(13, 5, 1000);
+            _buffer3D = new CircularBuffer3DMatrix<double>(13, 5, 1000);
 		}
 	}
 }

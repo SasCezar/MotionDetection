@@ -12,6 +12,7 @@ namespace MotionDetection.Models
 	public class DataReceiver
 	{
 		public event OnDataReceived NewDataReceived;
+		private CircularBuffer3DMatrix<double> _buffer; // Creazione Buffer
 
 		// TODO Set socket as a public parameter
 		public void Start()
@@ -72,8 +73,8 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-			    var buffer = CircularBufferMatrix<double>.Instance; // Creazione Buffer
 
+				_buffer = new CircularBuffer3DMatrix<double>(13, numOfSensors, 500);
 				var t = new int[maxNumberOfSensors];
 
 				var time = 0;
@@ -88,7 +89,7 @@ namespace MotionDetection.Models
 					for (var i = 0; i < numOfSensors; ++i)
 					{
 						var byteNumber = new byte[4];
-						for (var tr = 0; tr < 1; ++tr) // 13 campi, 3 * 3 + 4
+						for (var tr = 0; tr < 13; ++tr) // 13 campi, 3 * 3 + 4
 						{
 							if (numOfSensors < 5)
 							{
@@ -105,7 +106,7 @@ namespace MotionDetection.Models
 								byteNumber[3] = packet[t[i] + 2];
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
-							buffer[tr, i, time] = valore; // Memorizzazione
+							_buffer[tr, i, time] = valore; // Memorizzazione
 
 							
 							var dataArgs = new DataEventArgs
@@ -129,22 +130,23 @@ namespace MotionDetection.Models
 					packet = numOfSensors < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
 					time++; // Incremento contatore tempo
 				} while (packet.Length != 0);
-                //ctrl k u
-                //var csv = new StringBuilder();
+				
+				//ctrl k u
+				var csv = new StringBuilder();
 
-                //for (int i = 0; i < buffer.SensorType; ++i)
-                //{
-                //    for (int j = 0; j < buffer.SensorNumber; ++j)
-                //    {
-                //        for (int k = 0; k < buffer.Time; ++k)
-                //        {
-                //            csv.AppendLine(buffer[i, j, k].ToString());
-                //        }
-                //    }
-                //}
-                //File.WriteAllText("C:/Users/Ilaria/Desktop/BufferTest.csv", csv.ToString());
+				for (int i = 0; i < _buffer.SensorType; ++i)
+				{
+					for (int j = 0; j < _buffer.SensorNumber; ++j)
+					{
+						for (int k = 0; k < _buffer.Time; ++k)
+						{
+							csv.AppendLine(_buffer[i, j, k].ToString());
+						}
+					}
+				}
+				File.WriteAllText("C:/Users/Cezar Sas/Desktop/BufferTest.csv", csv.ToString());
 
-            }
-        }
+			}
+		}
 	}
 }

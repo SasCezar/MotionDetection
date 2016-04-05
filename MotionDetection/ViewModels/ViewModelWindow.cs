@@ -63,7 +63,7 @@ namespace MotionDetection.ViewModels
 			Series.Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
 			// TODO Remove and fire when new data array added
 			++_counter;
-			if (_counter%30 == 0) 
+			if (_counter%50 == 0) 
 			{
 				MyModel.InvalidatePlot(true);
 			}

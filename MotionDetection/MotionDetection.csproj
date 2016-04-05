@@ -84,7 +84,8 @@
     </ApplicationDefinition>
     <Compile Include="Commands\ConnectionCommand.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Models\CircularBufferMatrix.cs" />
+    <Compile Include="Models\Buffer3DMatrix.cs" />
+    <Compile Include="Models\CircularBuffer3DMatrix.cs" />
     <Compile Include="Models\DataManipulation.cs" />
     <Compile Include="Models\DataViewModel.cs" />
     <Compile Include="Models\DataReceiver.cs" />
