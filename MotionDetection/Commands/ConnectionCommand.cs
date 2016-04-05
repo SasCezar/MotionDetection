@@ -24,7 +24,7 @@ namespace MotionDetection.Commands
 		{
 			await Task.Factory.StartNew(() => Receiver.Start());
 		}
-
+		// TODO Manages CanExecute form socket
 		public event EventHandler CanExecuteChanged;
 	}
 }

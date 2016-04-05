@@ -4,6 +4,8 @@ namespace MotionDetection.Models
 {
 	internal class DataManipulation
 	{
+		// TODO Rewrite Modulo method to return a double[] and accept vectors
+		// TODO Same for all methods
 		public static double[][] Modulo(CircularBufferMatrix<double> A)
 		{
 			var B = new double[A.SensorType][];

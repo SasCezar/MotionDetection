@@ -8,13 +8,11 @@ namespace MotionDetection.Models
 {
 	public delegate void OnDataReceived(object sender, DataEventArgs eventArgs);
 
-	public delegate void MyDataHandler(object sender, EventArgs eventArgs);
-
 	public class DataReceiver
 	{
 		public event OnDataReceived NewDataReceived;
-		public event MyDataHandler NewData;
 
+		// TODO Set socket as a public parameter
 		public void Start()
 		{
 			var ep = new IPEndPoint(IPAddress.Any, 45555);
@@ -24,7 +22,6 @@ namespace MotionDetection.Models
 			var socketClientThread = new Thread(Read);
 			socketClientThread.Start(socket);
 		}
-
 
 		public void Read(object obj)
 		{
@@ -109,6 +106,7 @@ namespace MotionDetection.Models
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							buffer[tr, i, time] = valore; // Memorizzazione
 
+							
 							var dataArgs = new DataEventArgs
 							{
 								SensorData = new DataViewModel
@@ -119,6 +117,7 @@ namespace MotionDetection.Models
 								}
 							};
 
+							// TODO Change event notify (also subscribers)
 							NewDataReceived?.Invoke(this, dataArgs);
 
 							t[i] += 4;

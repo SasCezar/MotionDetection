@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using MotionDetection.Commands;
 using MotionDetection.Models;
 using OxyPlot;
@@ -10,48 +9,46 @@ namespace MotionDetection.ViewModels
 {
 	public class ViewModelWindow
 	{
-	    private int Counter = 0;
+		private int _counter;
 
 		public DataReceiver Receiver;
 
-	    public PlotModel MyModel {get; set; }
+		private LineSeries Series;
 
-	    private LineSeries Series;
-
-
-        public ViewModelWindow()
+		public ViewModelWindow()
 		{
 			Receiver = new DataReceiver();
 			Receiver.NewDataReceived += OnDataReceived;
 
 			Command = new ConnectionCommand(Receiver);
 
-            MyModel = new PlotModel()
-            {
-                Title = "Example"
-            };
+			// TODO Add multiple models (one model for each plot) with multiple series
+			MyModel = new PlotModel
+			{
+				Title = "Example"
+			};
 
 			Points = new List<DataPoint>();
 
-            MyModel.Axes.Add(new LinearAxis()
-            {
-                Position = AxisPosition.Bottom,
-                Minimum = 0
+			MyModel.Axes.Add(new LinearAxis
+			{
+				Position = AxisPosition.Bottom,
+				Minimum = 0
+			});
 
-            });
-            
-            MyModel.Axes.Add(new LinearAxis()
-            {
-                Position = AxisPosition.Left
+			MyModel.Axes.Add(new LinearAxis
+			{
+				Position = AxisPosition.Left
+			});
 
-            });
+			Series = new LineSeries
+			{
+				Title = "Accelerometro"
+			};
+			MyModel.Series.Add(Series);
+		}
 
-            Series = new LineSeries()
-            {
-                Title = "Accelerometro",
-            };
-            MyModel.Series.Add(Series);
-        }
+		public PlotModel MyModel { get; set; }
 
 		public string Title { get; } = "Serie 1";
 
@@ -59,18 +56,18 @@ namespace MotionDetection.ViewModels
 		public ConnectionCommand Command { get; set; }
 		public IList<DataPoint> Points { get; set; }
 
-
+		// TODO "Move" to DataManipulation
 		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
 		{
 			var sensorData = sensorArgs.SensorData;
-            //Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
-            Series.Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
-		    ++Counter;
-		    if (Counter%30 == 0)
-		    {
-		        MyModel.InvalidatePlot(true);
-
-		    }
+			//Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
+			Series.Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
+			// TODO Remove and fire when new data array added
+			++_counter;
+			if (_counter%30 == 0)
+			{
+				MyModel.InvalidatePlot(true);
+			}
 		}
 	}
 }
