@@ -12,7 +12,7 @@
     </Window.DataContext>
 
     <Grid>
-        <oxy:PlotView Model="{Binding MyModel}" />
+        <oxy:PlotView Model="{Binding MyModel}" Margin="10,0,227,0" />
         <Button x:Name="ConnectButton"
                 Width="200"
                 Height="110"

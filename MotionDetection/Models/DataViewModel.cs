@@ -21,7 +21,7 @@ namespace MotionDetection.Models
 
 	public struct DataViewModel
 	{
-		// TODO? Implement SensorNumber
+	    public int SensorNumber { get; set; }
 		public float Value { get; set; }
 		public int Time { get; set; }
 		public SensorTypeEnum SensorType { get; set; }

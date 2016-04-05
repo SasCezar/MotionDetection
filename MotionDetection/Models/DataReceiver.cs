@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace MotionDetection.Models
@@ -23,7 +24,7 @@ namespace MotionDetection.Models
 			socketClientThread.Start(socket);
 		}
 
-		public void Read(object obj)
+        public void Read(object obj)
 		{
 			var socket = (Socket) obj;
 			using (Stream stream = new NetworkStream(socket))
@@ -71,7 +72,7 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-				var buffer = new CircularBufferMatrix<double>(13, numOfSensors, 750); // Creazione Buffer
+			    var buffer = CircularBufferMatrix<double>.Instance; // Creazione Buffer
 
 				var t = new int[maxNumberOfSensors];
 
@@ -79,15 +80,15 @@ namespace MotionDetection.Models
 
 				do
 				{
-					for (var x = 0; x < numOfSensors; x++)
+					for (var x = 0; x < numOfSensors; ++x)
 					{
 						t[x] = 5 + 52*x;
 					}
 
-					for (var i = 0; i < numOfSensors; i += numOfSensors)
+					for (var i = 0; i < numOfSensors; ++i)
 					{
 						var byteNumber = new byte[4];
-						for (var tr = 0; tr < 1; tr++) // 13 campi, 3 * 3 + 4
+						for (var tr = 0; tr < 1; ++tr) // 13 campi, 3 * 3 + 4
 						{
 							if (numOfSensors < 5)
 							{
@@ -128,7 +129,22 @@ namespace MotionDetection.Models
 					packet = numOfSensors < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
 					time++; // Incremento contatore tempo
 				} while (packet.Length != 0);
-			}
-		}
+                //ctrl k u
+                //var csv = new StringBuilder();
+
+                //for (int i = 0; i < buffer.SensorType; ++i)
+                //{
+                //    for (int j = 0; j < buffer.SensorNumber; ++j)
+                //    {
+                //        for (int k = 0; k < buffer.Time; ++k)
+                //        {
+                //            csv.AppendLine(buffer[i, j, k].ToString());
+                //        }
+                //    }
+                //}
+                //File.WriteAllText("C:/Users/Ilaria/Desktop/BufferTest.csv", csv.ToString());
+
+            }
+        }
 	}
 }

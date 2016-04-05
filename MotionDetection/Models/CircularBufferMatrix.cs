@@ -1,10 +1,15 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace MotionDetection.Models
 {
 	public class CircularBufferMatrix<T>
 	{
+	    private static CircularBufferMatrix<T> _instance; 
+
 		private T[][][] _circularBuffer;
+
+        private CircularBufferMatrix() { } 
 
 		public CircularBufferMatrix(int sensorType, int sensorNumber, int time)
 		{
@@ -20,6 +25,7 @@ namespace MotionDetection.Models
 					_circularBuffer[i][j] = new T[Time];
 				}
 			}
+		    _instance = this;
 		}
 		/* TODO Implement Read & Write indexes
 		public int ReadIndex { get; set; }
@@ -45,6 +51,17 @@ namespace MotionDetection.Models
 
 		#region Getters
 
+	    public static CircularBufferMatrix<T> Instance
+	    {
+	        get
+	        {
+	            if (_instance == null)
+	            {
+	                throw new Exception("Buffer not created yet!");
+	            }
+	            return _instance;
+	        }
+	    } 
 		public int SensorNumber { get; }
 
 		public int SensorType { get; }

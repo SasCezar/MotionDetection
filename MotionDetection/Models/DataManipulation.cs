@@ -6,7 +6,7 @@ namespace MotionDetection.Models
 	{
 		// TODO Rewrite Modulo method to return a double[] and accept vectors
 		// TODO Same for all methods
-		public static double[][] Modulo(CircularBufferMatrix<double> A)
+		public static double[]   Modulo(double[] sensorValues)
 		{
 			var B = new double[A.SensorType][];
 			for (var i = 0; i < A.SensorType; i++)
