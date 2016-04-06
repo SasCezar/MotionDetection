@@ -11,8 +11,8 @@ namespace MotionDetection.Views
 		public MainWindow(ViewModelWindow viewModel)
 		{
 			InitializeComponent();
-			//Don't forget DataContext so we can bind these properties.
 			DataContext = viewModel;
+		
 		}
 
 	}

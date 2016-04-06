@@ -2,13 +2,12 @@
 
 namespace MotionDetection.Models
 {
-
 	public delegate void OnDataReceivedHandler(object sender, DataEventArgs eventArgs);
 
 	public class DataManipulation
 	{
-		public event OnDataReceivedHandler NewDataReceived;
 		private Buffer3DMatrix<double> _buffer;
+
 		public Buffer3DMatrix<double> Buffer
 		{
 			get { return _buffer; }
@@ -22,23 +21,8 @@ namespace MotionDetection.Models
 			}
 		}
 
-		public static int FirstIndex(int i, int width)
-		{
-			if (i >= width/2)
-			{
-				return (i - width)/2;
-			}
-			return 0;
-		}
-
-		public static int LastIndex(int i, int width, int size)
-		{
-			if (i + width/2 < size)
-			{
-				return i + width/2;
-			}
-			return size - 1;
-		}
+		public int GlobalTime { get; set; }
+		public event OnDataReceivedHandler NewDataReceived;
 
 		public void Smoothing(CircularBuffer3DMatrix<double> circularBuffer, int windowSize)
 		{
@@ -60,6 +44,12 @@ namespace MotionDetection.Models
 					}
 				}
 			}
+			var dataArgs = new DataEventArgs
+			{
+				SensorData = _buffer.GetSubArray(1, 1),
+				Time = GlobalTime
+			};
+			NewDataReceived?.Invoke(this, dataArgs);
 		}
 
 
@@ -143,6 +133,25 @@ namespace MotionDetection.Models
 				}
 			}
 			return B;
+		}
+
+
+		private static int FirstIndex(int i, int width)
+		{
+			if (i >= width/2)
+			{
+				return (i - width)/2;
+			}
+			return 0;
+		}
+
+		private static int LastIndex(int i, int width, int size)
+		{
+			if (i + width/2 < size)
+			{
+				return i + width/2;
+			}
+			return size - 1;
 		}
 	}
 }

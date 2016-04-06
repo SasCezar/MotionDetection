@@ -8,19 +8,17 @@ using System.Threading.Tasks;
 
 namespace MotionDetection.Models
 {
-
-
 	public class DataReceiver
 	{
 		private const int Time = 75;
 		private const int NumSensorType = 13;
-		private const int StaticBufferTime = Time * 2/3;
+		private const int StaticBufferTime = Time*2/3;
 		private CircularBuffer3DMatrix<double> _buffer; // Creazione Buffer
 		private DataManipulation _dataManipulator;
 
 		public DataReceiver(DataManipulation dataManipulator)
 		{
-			this._dataManipulator = dataManipulator;
+			_dataManipulator = dataManipulator;
 		}
 
 		// TODO Set socket as a public parameter
@@ -34,7 +32,7 @@ namespace MotionDetection.Models
 			socketClientThread.Start(socket);
 		}
 
-        public async void Read(object obj)
+		public async void Read(object obj)
 		{
 			var socket = (Socket) obj;
 			using (Stream stream = new NetworkStream(socket))
@@ -82,11 +80,9 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-
 				_buffer = new CircularBuffer3DMatrix<double>(NumSensorType, numOfSensors, Time);
 				_dataManipulator.Buffer = new Buffer3DMatrix<double>(NumSensorType, numOfSensors, StaticBufferTime);
 				var t = new int[maxNumberOfSensors];
-
 				var time = 0;
 
 				do
@@ -122,21 +118,9 @@ namespace MotionDetection.Models
 							// TODO Call Smoothing async
 							if (time != 0 && time%StaticBufferTime == 0)
 							{
+								_dataManipulator.GlobalTime = time;
 								await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
 							}
-
-							//var dataArgs = new DataEventArgs
-							//{
-							//	SensorData = new DataViewModel
-							//	{
-							//		Value = valore,
-							//		Time = time,
-							//		SensorType = (SensorTypeEnum) tr
-							//	}
-							//};
-
-							//// TODO Change event notify (also subscribers)
-							//NewDataReceived?.Invoke(this, dataArgs);
 
 							t[i] += 4;
 						}
@@ -146,22 +130,21 @@ namespace MotionDetection.Models
 					packet = numOfSensors < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
 					time++; // Incremento contatore tempo
 				} while (packet.Length != 0);
-				
+
 				//ctrl k u
 				var csv = new StringBuilder();
 
-				for (int i = 0; i < _buffer.SensorType; ++i)
+				for (var i = 0; i < _buffer.SensorType; ++i)
 				{
-					for (int j = 0; j < _buffer.SensorNumber; ++j)
+					for (var j = 0; j < _buffer.SensorNumber; ++j)
 					{
-						for (int k = 0; k < _buffer.Time; ++k)
+						for (var k = 0; k < _buffer.Time; ++k)
 						{
 							csv.AppendLine(_buffer[i, j, k].ToString());
 						}
 					}
 				}
 				File.WriteAllText("C:/Users/Cezar Sas/Desktop/BufferTest.csv", csv.ToString());
-
 			}
 		}
 	}

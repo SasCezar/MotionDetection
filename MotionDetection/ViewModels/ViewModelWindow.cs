@@ -10,7 +10,6 @@ namespace MotionDetection.ViewModels
 	public class ViewModelWindow
 	{
 		private LineSeries Series;
-		private int _counter;
 
 		public ViewModelWindow(ConnectionCommand command, DataManipulation dataManipulator)
 		{
@@ -53,15 +52,13 @@ namespace MotionDetection.ViewModels
 
 		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
 		{
-			//var sensorData = sensorArgs.SensorData;
-			//Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
-			Series.Points.Add(new DataPoint(sensorArgs.SensorData, sensorArgs.Time));
-			// TODO Remove and fire when new data array added
-			//++_counter;
-			//if (_counter%50 == 0) 
-			//{
-			//	MyModel.InvalidatePlot(true);
-			//}
+			int i = 0;
+			foreach (var value in sensorArgs.SensorData)
+			{
+				Series.Points.Add(new DataPoint(value, sensorArgs.Time - sensorArgs.SensorData.Length + i));
+				++i;
+			}
+			MyModel.InvalidatePlot(true);
 		}
 	}
 }
