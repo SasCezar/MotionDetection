@@ -7,11 +7,11 @@ using System.Threading;
 
 namespace MotionDetection.Models
 {
-	public delegate void OnDataReceived(object sender, DataEventArgs eventArgs);
+	public delegate void OnDataReceivedHandler(object sender, DataEventArgs eventArgs);
 
 	public class DataReceiver
 	{
-		public event OnDataReceived NewDataReceived;
+		public event OnDataReceivedHandler NewDataReceived;
 		private CircularBuffer3DMatrix<double> _buffer; // Creazione Buffer
 		private DataManipulation _dataManipulation;
 
@@ -76,7 +76,7 @@ namespace MotionDetection.Models
 
 
 				_buffer = new CircularBuffer3DMatrix<double>(13, numOfSensors, 500);
-				_dataManipulation = new DataManipulation(13, numOfSensors, 500);
+				_dataManipulation = new DataManipulation(new Buffer3DMatrix<double>(13, numOfSensors, 500));
 				var t = new int[maxNumberOfSensors];
 
 				var time = 0;
@@ -110,19 +110,21 @@ namespace MotionDetection.Models
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							_buffer[tr, i, time] = valore; // Memorizzazione
 
-							
-							var dataArgs = new DataEventArgs
-							{
-								SensorData = new DataViewModel
-								{
-									Value = valore,
-									Time = time,
-									SensorType = (SensorTypeEnum) tr
-								}
-							};
 
-							// TODO Change event notify (also subscribers)
-							NewDataReceived?.Invoke(this, dataArgs);
+							// TODO Call Smoothing async
+							
+							//var dataArgs = new DataEventArgs
+							//{
+							//	SensorData = new DataViewModel
+							//	{
+							//		Value = valore,
+							//		Time = time,
+							//		SensorType = (SensorTypeEnum) tr
+							//	}
+							//};
+
+							//// TODO Change event notify (also subscribers)
+							//NewDataReceived?.Invoke(this, dataArgs);
 
 							t[i] += 4;
 						}
