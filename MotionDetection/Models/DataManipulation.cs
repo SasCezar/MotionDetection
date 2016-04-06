@@ -7,12 +7,40 @@ namespace MotionDetection.Models
 
 		private Buffer3DMatrix<double> _buffer;
 
-		public DataManipulation(int sensorType, int sensorNumber, int time)
+        /// <summary>
+        /// Constructor to associate the static buffer to the class
+        /// </summary>
+        /// <param name="buffer"></param>
+		public DataManipulation(Buffer3DMatrix<double> buffer)
 		{
-			_buffer = new Buffer3DMatrix<double>(sensorType, sensorNumber, time);
+			_buffer = buffer;
 		}
 
-		public void Smoothing(CircularBuffer3DMatrix<double> circularBuffer)
+	    public static int FirstIndex(int i, int width)
+	    {
+	        if (i >= width/2)
+	        {
+	            return (i - width)/2;
+	        }
+	        else
+	        {
+	            return 0;
+	        }
+	    }
+
+	    public static int LastIndex(int i, int width, int size)
+	    {
+	        if (i + width/2 < size)
+	        {
+	            return (i + width/2);
+	        }
+	        else
+	        {
+	            return (size - 1);
+	        }
+	    }
+
+		public void Smoothing(CircularBuffer3DMatrix<double> circularBuffer, int windowSize)
 		{
 			for (var i = 0; i < _buffer.SensorType; i++)
 			{
@@ -20,7 +48,15 @@ namespace MotionDetection.Models
 				{
 					for (var k = 0; k < _buffer.Time; k++)
 					{
-						
+					    double sum = 0.0;
+					    int start = FirstIndex(k, windowSize);
+					    int stop = LastIndex(k, windowSize, circularBuffer.Time);
+
+					    for (int h = start; h <= stop; ++h)
+					    {
+					        sum = sum + circularBuffer[i, j, h];
+					    }
+					    _buffer[i, j, k] = sum/(stop - start + 1);
 					}
 				}
 			}
