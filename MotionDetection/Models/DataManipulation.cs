@@ -7,11 +7,26 @@ namespace MotionDetection.Models
 
 		private Buffer3DMatrix<double> _buffer;
 
-		public DataManipulation()
+		public DataManipulation(int sensorType, int sensorNumber, int time)
 		{
-			_buffer = new Buffer3DMatrix<double>(1,1,1); // Stub
+			_buffer = new Buffer3DMatrix<double>(sensorType, sensorNumber, time);
 		}
-		
+
+		public void Smoothing(CircularBuffer3DMatrix<double> circularBuffer)
+		{
+			for (var i = 0; i < _buffer.SensorType; i++)
+			{
+				for (var j = 0; j < _buffer.SensorNumber; j++)
+				{
+					for (var k = 0; k < _buffer.Time; k++)
+					{
+						
+					}
+				}
+			}
+		}
+
+
 		// TODO Rewrite Modulo method to return a double[] and accept vectors
 		// TODO Same for all methods
 		//public static double[]   Modulo(double[] sensorValues)
@@ -27,20 +42,6 @@ namespace MotionDetection.Models
 		//	}
 		//	return B;
 		//}
-
-		public void Smoothing(CircularBuffer3DMatrix<double> circularBuffer)
-		{
-			for (var i = 0; i < _buffer.SensorType; i++)
-			{
-				for (var j = 0; j < _buffer.SensorNumber; j++)
-				{
-					for (var k = 0; k < _buffer.Time; k++)
-					{
-						
-					}
-				}
-			}
-		}
 
 		public static double[][] DifferenceQuotient(CircularBuffer3DMatrix<double> A, int Sensor)
 		{

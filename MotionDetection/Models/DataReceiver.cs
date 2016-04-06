@@ -13,6 +13,7 @@ namespace MotionDetection.Models
 	{
 		public event OnDataReceived NewDataReceived;
 		private CircularBuffer3DMatrix<double> _buffer; // Creazione Buffer
+		private DataManipulation _dataManipulation;
 
 		// TODO Set socket as a public parameter
 		public void Start()
@@ -75,6 +76,7 @@ namespace MotionDetection.Models
 
 
 				_buffer = new CircularBuffer3DMatrix<double>(13, numOfSensors, 500);
+				_dataManipulation = new DataManipulation(13, numOfSensors, 500);
 				var t = new int[maxNumberOfSensors];
 
 				var time = 0;
