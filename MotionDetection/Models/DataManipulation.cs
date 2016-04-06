@@ -2,43 +2,43 @@
 
 namespace MotionDetection.Models
 {
-	internal class DataManipulation
+
+	public delegate void OnDataReceivedHandler(object sender, DataEventArgs eventArgs);
+
+	public class DataManipulation
 	{
-
+		public event OnDataReceivedHandler NewDataReceived;
 		private Buffer3DMatrix<double> _buffer;
-
-        /// <summary>
-        /// Constructor to associate the static buffer to the class
-        /// </summary>
-        /// <param name="buffer"></param>
-		public DataManipulation(Buffer3DMatrix<double> buffer)
+		public Buffer3DMatrix<double> Buffer
 		{
-			_buffer = buffer;
+			get { return _buffer; }
+			set
+			{
+				if (_buffer != null)
+				{
+					throw new Exception("Cannot change the buffer");
+				}
+				_buffer = value;
+			}
 		}
 
-	    public static int FirstIndex(int i, int width)
-	    {
-	        if (i >= width/2)
-	        {
-	            return (i - width)/2;
-	        }
-	        else
-	        {
-	            return 0;
-	        }
-	    }
+		public static int FirstIndex(int i, int width)
+		{
+			if (i >= width/2)
+			{
+				return (i - width)/2;
+			}
+			return 0;
+		}
 
-	    public static int LastIndex(int i, int width, int size)
-	    {
-	        if (i + width/2 < size)
-	        {
-	            return (i + width/2);
-	        }
-	        else
-	        {
-	            return (size - 1);
-	        }
-	    }
+		public static int LastIndex(int i, int width, int size)
+		{
+			if (i + width/2 < size)
+			{
+				return i + width/2;
+			}
+			return size - 1;
+		}
 
 		public void Smoothing(CircularBuffer3DMatrix<double> circularBuffer, int windowSize)
 		{
@@ -48,15 +48,15 @@ namespace MotionDetection.Models
 				{
 					for (var k = 0; k < _buffer.Time; k++)
 					{
-					    double sum = 0.0;
-					    int start = FirstIndex(k, windowSize);
-					    int stop = LastIndex(k, windowSize, circularBuffer.Time);
+						var sum = 0.0;
+						var start = FirstIndex(k, windowSize);
+						var stop = LastIndex(k, windowSize, circularBuffer.Time);
 
-					    for (int h = start; h <= stop; ++h)
-					    {
-					        sum = sum + circularBuffer[i, j, h];
-					    }
-					    _buffer[i, j, k] = sum/(stop - start + 1);
+						for (var h = start; h <= stop; ++h)
+						{
+							sum = sum + circularBuffer[i, j, h];
+						}
+						_buffer[i, j, k] = sum/(stop - start + 1);
 					}
 				}
 			}

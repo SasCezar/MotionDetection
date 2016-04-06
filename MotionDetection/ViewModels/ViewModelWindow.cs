@@ -9,19 +9,14 @@ namespace MotionDetection.ViewModels
 {
 	public class ViewModelWindow
 	{
+		private LineSeries Series;
 		private int _counter;
 
-		public DataReceiver Receiver;
-
-		private LineSeries Series;
-
-		public ViewModelWindow()
+		public ViewModelWindow(ConnectionCommand command, DataManipulation dataManipulator)
 		{
-			Receiver = new DataReceiver();
-			Receiver.NewDataReceived += OnDataReceived;
-
-			Command = new ConnectionCommand(Receiver);
-
+			Command = command;
+			DataManipulator = dataManipulator;
+			DataManipulator.NewDataReceived += OnDataReceived;
 			// TODO Add multiple models (one model for each plot) with multiple series
 			MyModel = new PlotModel
 			{
@@ -48,25 +43,25 @@ namespace MotionDetection.ViewModels
 			MyModel.Series.Add(Series);
 		}
 
+		public DataManipulation DataManipulator { get; set; }
+
 		public PlotModel MyModel { get; set; }
 
-		public string Title { get; } = "Serie 1";
-
-
 		public ConnectionCommand Command { get; set; }
+
 		public IList<DataPoint> Points { get; set; }
 
 		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
 		{
-			var sensorData = sensorArgs.SensorData;
+			//var sensorData = sensorArgs.SensorData;
 			//Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
-			Series.Points.Add(new DataPoint(sensorData.Time, sensorData.Value));
+			Series.Points.Add(new DataPoint(sensorArgs.SensorData, sensorArgs.Time));
 			// TODO Remove and fire when new data array added
-			++_counter;
-			if (_counter%50 == 0) 
-			{
-				MyModel.InvalidatePlot(true);
-			}
+			//++_counter;
+			//if (_counter%50 == 0) 
+			//{
+			//	MyModel.InvalidatePlot(true);
+			//}
 		}
 	}
 }

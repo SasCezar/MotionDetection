@@ -4,16 +4,24 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MotionDetection.Models
 {
-	public delegate void OnDataReceivedHandler(object sender, DataEventArgs eventArgs);
+
 
 	public class DataReceiver
 	{
-		public event OnDataReceivedHandler NewDataReceived;
+		private const int Time = 75;
+		private const int NumSensorType = 13;
+		private const int StaticBufferTime = Time * 2/3;
 		private CircularBuffer3DMatrix<double> _buffer; // Creazione Buffer
-		private DataManipulation _dataManipulation;
+		private DataManipulation _dataManipulator;
+
+		public DataReceiver(DataManipulation dataManipulator)
+		{
+			this._dataManipulator = dataManipulator;
+		}
 
 		// TODO Set socket as a public parameter
 		public void Start()
@@ -26,7 +34,7 @@ namespace MotionDetection.Models
 			socketClientThread.Start(socket);
 		}
 
-        public void Read(object obj)
+        public async void Read(object obj)
 		{
 			var socket = (Socket) obj;
 			using (Stream stream = new NetworkStream(socket))
@@ -75,8 +83,8 @@ namespace MotionDetection.Models
 				}
 
 
-				_buffer = new CircularBuffer3DMatrix<double>(13, numOfSensors, 500);
-				_dataManipulation = new DataManipulation(new Buffer3DMatrix<double>(13, numOfSensors, 500));
+				_buffer = new CircularBuffer3DMatrix<double>(NumSensorType, numOfSensors, Time);
+				_dataManipulator.Buffer = new Buffer3DMatrix<double>(NumSensorType, numOfSensors, StaticBufferTime);
 				var t = new int[maxNumberOfSensors];
 
 				var time = 0;
@@ -91,7 +99,7 @@ namespace MotionDetection.Models
 					for (var i = 0; i < numOfSensors; ++i)
 					{
 						var byteNumber = new byte[4];
-						for (var tr = 0; tr < 13; ++tr) // 13 campi, 3 * 3 + 4
+						for (var tr = 0; tr < NumSensorType; ++tr) // 13 campi, 3 * 3 + 4
 						{
 							if (numOfSensors < 5)
 							{
@@ -112,7 +120,11 @@ namespace MotionDetection.Models
 
 
 							// TODO Call Smoothing async
-							
+							if (time != 0 && time%StaticBufferTime == 0)
+							{
+								await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
+							}
+
 							//var dataArgs = new DataEventArgs
 							//{
 							//	SensorData = new DataViewModel

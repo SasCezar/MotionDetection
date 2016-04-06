@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using MotionDetection.Commands;
 using MotionDetection.Models;
 using MotionDetection.ViewModels;
 using MotionDetection.Views;
@@ -7,22 +8,15 @@ namespace MotionDetection
 {
 	public class Main
 	{
-		private MainWindow Form;
-		private ViewModelWindow _viewModel;
-	    private CircularBuffer3DMatrix<double> _buffer3D;
-
         public Main()
 		{
-			_viewModel = new ViewModelWindow();
-			Form = new MainWindow(_viewModel);
-			Form.Show();
-			/* Test - Do Not Remove
-			CircularBuffer3DMatrix<double> matrice = new CircularBuffer3DMatrix<double>(5, 5, 5) {[1, 1, 1] = 50.5};
-			double[] ou = matrice.GetSubArray(1, 1);
-			ou[1] = 10;
-			MessageBox.Show("" + matrice[1,1,1] + " " + ou[1]);
-			*/
-            _buffer3D = new CircularBuffer3DMatrix<double>(13, 5, 1000);
+			DataManipulation dataManipulator = new DataManipulation();
+			DataReceiver dataReceiver = new DataReceiver(dataManipulator);
+			ConnectionCommand command = new ConnectionCommand(dataReceiver);
+			ViewModelWindow viewModel = new ViewModelWindow(command, dataManipulator);
+			MainWindow form = new MainWindow(viewModel);
+			form.Show();
+
 		}
 	}
 }

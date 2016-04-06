@@ -1,57 +1,86 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MotionDetection.Models
 {
 	public class Buffer3DMatrix<T>
 	{
-		private T[][][] _circularBuffer;
+		private int _sensorNumber = -1;
+		private int _sensorType = -1;
+		private int _time = -1;
 
-		public T[][][] CircularBuffer
+		private Buffer3DMatrix()
 		{
-			get { return _circularBuffer; }
 		}
-
-		private Buffer3DMatrix() { }
 
 		public Buffer3DMatrix(int sensorType, int sensorNumber, int time)
 		{
 			SensorType = sensorType;
 			SensorNumber = sensorNumber;
 			Time = time;
-			_circularBuffer = new T[SensorType][][];
+			CircularBuffer = new T[SensorType][][];
 			for (var i = 0; i < SensorType; i++)
 			{
-				_circularBuffer[i] = new T[SensorNumber][];
+				CircularBuffer[i] = new T[SensorNumber][];
 				for (var j = 0; j < SensorNumber; j++)
 				{
-					_circularBuffer[i][j] = new T[Time];
+					CircularBuffer[i][j] = new T[Time];
 				}
 			}
 		}
 
+		public T[][][] CircularBuffer { get; }
+
 		public T this[int sensorType, int sensorNumber, int time]
 		{
-			get { return _circularBuffer[sensorType][sensorNumber][time]; }
-			set { _circularBuffer[sensorType][sensorNumber][time] = value; }
+			get { return CircularBuffer[sensorType][sensorNumber][time]; }
+			set { CircularBuffer[sensorType][sensorNumber][time] = value; }
 		}
 
 		public T[] GetSubArray(int sensorType, int sensorNumber)
 		{
-			return _circularBuffer[sensorType][sensorNumber];
+			return CircularBuffer[sensorType][sensorNumber];
 		}
-
 
 		#region Getters
 
-		public int SensorNumber { get; }
+		public int SensorNumber
+		{
+			get { return _sensorNumber; }
+			set
+			{
+				if (SensorNumber != -1)
+				{
+					throw new Exception("Cannot change buffer size");
+				}
+				_sensorNumber = value;
+			}
+		}
 
-		public int SensorType { get; }
+		public int SensorType
+		{
+			get { return _sensorType; }
+			set
+			{
+				if (_sensorType != -1)
+				{
+					throw new Exception("Cannot change buffer size");
+				}
+				_sensorType = value;
+			}
+		}
 
-		public int Time { get; }
+		public int Time
+		{
+			get { return _time; }
+			set
+			{
+				if (_time != -1)
+				{
+					throw new Exception("Cannot change buffer size");
+				}
+				_time = value;
+			}
+		}
 
 		#endregion
 	}

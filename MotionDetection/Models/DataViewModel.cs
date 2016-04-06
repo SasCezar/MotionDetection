@@ -21,7 +21,7 @@ namespace MotionDetection.Models
 
 	public struct DataViewModel
 	{
-	    public int SensorNumber { get; set; }
+		public int SensorNumber { get; set; }
 		public float Value { get; set; }
 		public int Time { get; set; }
 		public SensorTypeEnum SensorType { get; set; }
@@ -30,6 +30,7 @@ namespace MotionDetection.Models
 	// TODO? Convert to and array of SensorData
 	public class DataEventArgs : EventArgs
 	{
-		public DataViewModel SensorData;
+		public double[] SensorData;
+		public int Time;
 	}
 }
