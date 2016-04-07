@@ -33,6 +33,7 @@ namespace MotionDetection.Models
 				{
 					for (var k = 0; k < _buffer.Time; k++)
 					{
+						//_buffer[i, j, k] = circularBuffer[i, j, k];
 						var sum = 0.0;
 						var start = FirstIndex(k, windowSize);
 						var stop = LastIndex(k, windowSize, circularBuffer.Time);
@@ -43,13 +44,13 @@ namespace MotionDetection.Models
 							//MessageBox.Show(msg);
 							sum = sum + circularBuffer[i, j, h];
 						}
-						_buffer[i, j, k] = sum/(stop - start + 1);
+						_buffer[i, j, k] = sum / (stop - start + 1);
 					}
 				}
 			}
 			var dataArgs = new DataEventArgs
 			{
-				SensorData = _buffer.GetSubArray(1, 1),
+				SensorData = _buffer.GetSubArray(0, 0),
 				Time = GlobalTime
 			};
 			Console.WriteLine($"Global time = {GlobalTime}");

@@ -118,7 +118,12 @@ namespace MotionDetection.Models
 					}
 
 					
-					if (time != 0 && time % StaticBufferTime == 0)
+					if (time == 50)
+					{
+						_dataManipulator.GlobalTime = time;
+						await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
+					}
+					if (time != 0 && time > 50 && time % (Time -StaticBufferTime) == 0)
 					{
 						_dataManipulator.GlobalTime = time;
 						await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
