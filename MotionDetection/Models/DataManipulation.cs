@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 
@@ -52,12 +53,13 @@ namespace MotionDetection.Models
 			}
 
 		    var modulo = Modulo(_buffer.GetSubArray(0, 0), _buffer.GetSubArray(1, 0), _buffer.GetSubArray(2, 0));
+			var std = StandardDeviation(modulo);
 			var dataArgs = new DataEventArgs
 			{
-				SensorData = modulo,
+				SensorData = std,
 				Time = GlobalTime
 			};
-			Console.WriteLine($"Global time = {GlobalTime}");
+			//Console.WriteLine($"Global time = {GlobalTime}");
 			NewDataReceived?.Invoke(this, dataArgs);
 			circularBuffer.UpdateReadIndex();
 		}
@@ -91,15 +93,22 @@ namespace MotionDetection.Models
 
 	    private double[] StandardDeviation(double[] x)
 	    {
-            double [] result = new double[x.Length];
-	        double[] smoothed = Mean(x, STDWindow); 
-         //   for (int i = 0; i < result.Length; ++i)
-	        //{
-         //       var start = FirstIndex(i, STDWindow);
-         //       var stop = LastIndex(i, STDWindow x.Length);
-         //   }
-            
-        }
+            var result = new double[x.Length];
+			var rawSquare = x.Select(value => Math.Pow(value, 2)).ToArray(); 
+		    var meanSquare = Mean(x, STDWindow).Select(value => Math.Pow(value, 2)).ToArray();
+			for (var i = 0; i < result.Length; ++i)
+			{
+				var start = FirstIndex(i, STDWindow);
+				var segmentSum = new ArraySegment<double>(rawSquare, start, STDWindow).Sum();
+				if (i == 1)
+				{
+					Console.WriteLine(segmentSum.ToString());
+				}
+				var value = (segmentSum - meanSquare[i])/STDWindow;
+				result[i] = Math.Sqrt(value);
+			}
+		    return result;
+	    }
 
 	    private double[] Mean(double[] x, int windowSize)
 	    {
