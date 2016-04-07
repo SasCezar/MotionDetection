@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows;
+using System.Windows.Media;
 
 namespace MotionDetection.Models
 {
@@ -8,7 +10,6 @@ namespace MotionDetection.Models
 		private int ReadIndex { get; set; }
 		private readonly int _offset;
 		public int GlobalTime { get; set; }
-
 
 		public CircularBuffer3DMatrix(int sensorType, int sensorNumber, int time) : base(sensorType, sensorNumber,time)
 		{
@@ -20,7 +21,13 @@ namespace MotionDetection.Models
 
 		public new T this[int sensorType, int sensorNumber, int time]
 		{
-			get { return CircularBuffer[sensorType][sensorNumber][ReadIndex + time%Time]; }
+			get
+			{
+				//var msg = String.Format("SensorType {0}, SensorNumber {1}, ReadIndex {2}, time {3}, Time {4}", sensorType,
+				//	sensorNumber, ReadIndex, time, Time);
+				//MessageBox.Show(msg);
+				return CircularBuffer[sensorType][sensorNumber][(ReadIndex + time)%Time];
+			}
 			set { CircularBuffer[sensorType][sensorNumber][time%Time] = value; }
 		}
 

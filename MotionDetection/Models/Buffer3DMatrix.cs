@@ -28,7 +28,7 @@ namespace MotionDetection.Models
 			}
 		}
 
-		public T[][][] CircularBuffer { get; }
+		protected T[][][] CircularBuffer { get; set; }
 
 		public T this[int sensorType, int sensorNumber, int time]
 		{

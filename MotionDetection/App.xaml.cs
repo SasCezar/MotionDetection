@@ -15,7 +15,7 @@ namespace MotionDetection
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			Main main = new Main();
+		
 			// Step 1 - Load the splash screen 
 			var splash = new SplashScreen("Resources/SplashScreen.tif");
 			splash.Show(false, true);
@@ -36,7 +36,7 @@ namespace MotionDetection
 
 			// Step 5 - show the page 
 			splash.Close(TimeSpan.FromMilliseconds(SPLASH_FADE_TIME));
-	
+			Main main = new Main();
 		}
 	}
 }

@@ -113,17 +113,15 @@ namespace MotionDetection.Models
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							_buffer[tr, i, time] = valore; // Memorizzazione
-
-
-							// TODO Call Smoothing async
-							if (time != 0 && time%StaticBufferTime == 0)
-							{
-								_dataManipulator.GlobalTime = time;
-								await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
-							}
-
 							t[i] += 4;
 						}
+					}
+
+					
+					if (time != 0 && time % StaticBufferTime == 0)
+					{
+						_dataManipulator.GlobalTime = time;
+						await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
 					}
 
 					// Lettura pacchetto seguente
@@ -131,9 +129,8 @@ namespace MotionDetection.Models
 					time++; // Incremento contatore tempo
 				} while (packet.Length != 0);
 
-				//ctrl k u
 				var csv = new StringBuilder();
-
+				
 				for (var i = 0; i < _buffer.SensorType; ++i)
 				{
 					for (var j = 0; j < _buffer.SensorNumber; ++j)

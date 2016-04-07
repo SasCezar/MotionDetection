@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 
 namespace MotionDetection.Models
 {
@@ -38,6 +39,8 @@ namespace MotionDetection.Models
 
 						for (var h = start; h <= stop; ++h)
 						{
+							//var msg = $"Start {start}, Stop {stop}, H {h}";
+							//MessageBox.Show(msg);
 							sum = sum + circularBuffer[i, j, h];
 						}
 						_buffer[i, j, k] = sum/(stop - start + 1);
@@ -49,7 +52,9 @@ namespace MotionDetection.Models
 				SensorData = _buffer.GetSubArray(1, 1),
 				Time = GlobalTime
 			};
+			Console.WriteLine($"Global time = {GlobalTime}");
 			NewDataReceived?.Invoke(this, dataArgs);
+			circularBuffer.UpdateReadIndex();
 		}
 
 
@@ -138,11 +143,8 @@ namespace MotionDetection.Models
 
 		private static int FirstIndex(int i, int width)
 		{
-			if (i >= width/2)
-			{
-				return (i - width)/2;
-			}
-			return 0;
+			return ((i - width)/2) > 0 ? ((i - width)/2) : 0;
+
 		}
 
 		private static int LastIndex(int i, int width, int size)

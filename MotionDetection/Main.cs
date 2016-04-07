@@ -10,6 +10,7 @@ namespace MotionDetection
 	{
 		public Main()
 		{
+			// TODO Verify data output
 			var dataManipulator = new DataManipulation();
 			var dataReceiver = new DataReceiver(dataManipulator);
 			var command = new ConnectionCommand(dataReceiver);

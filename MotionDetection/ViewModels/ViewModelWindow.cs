@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Interop;
 using MotionDetection.Commands;
 using MotionDetection.Models;
 using OxyPlot;
@@ -9,7 +12,12 @@ namespace MotionDetection.ViewModels
 {
 	public class ViewModelWindow
 	{
-		private LineSeries Series;
+		public LineSeries Series;
+
+		public ViewModelWindow()
+		{
+			
+		}
 
 		public ViewModelWindow(ConnectionCommand command, DataManipulation dataManipulator)
 		{
@@ -55,7 +63,9 @@ namespace MotionDetection.ViewModels
 			int i = 0;
 			foreach (var value in sensorArgs.SensorData)
 			{
-				Series.Points.Add(new DataPoint(value, sensorArgs.Time - sensorArgs.SensorData.Length + i));
+				var msg = $"Time {sensorArgs.Time - sensorArgs.SensorData.Length + i}";
+				Debug.WriteLine(msg);
+				Series.Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
 				++i;
 			}
 			MyModel.InvalidatePlot(true);
