@@ -134,19 +134,19 @@ namespace MotionDetection.Models
 					time++; // Incremento contatore tempo
 				} while (packet.Length != 0);
 
-				var csv = new StringBuilder();
+				//var csv = new StringBuilder();
 				
-				for (var i = 0; i < _buffer.SensorType; ++i)
-				{
-					for (var j = 0; j < _buffer.SensorNumber; ++j)
-					{
-						for (var k = 0; k < _buffer.Time; ++k)
-						{
-							csv.AppendLine(_buffer[i, j, k].ToString());
-						}
-					}
-				}
-				File.WriteAllText("C:/Users/Cezar Sas/Desktop/BufferTest.csv", csv.ToString());
+				//for (var i = 0; i < _buffer.SensorType; ++i)
+				//{
+				//	for (var j = 0; j < _buffer.SensorNumber; ++j)
+				//	{
+				//		for (var k = 0; k < _buffer.Time; ++k)
+				//		{
+				//			csv.AppendLine(_buffer[i, j, k].ToString());
+				//		}
+				//	}
+				//}
+				//File.WriteAllText("C:/Users/Cezar Sas/Desktop/BufferTest.csv", csv.ToString());
 			}
 		}
 	}

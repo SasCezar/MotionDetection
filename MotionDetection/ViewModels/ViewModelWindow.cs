@@ -60,7 +60,8 @@ namespace MotionDetection.ViewModels
 
 		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
 		{
-			for (var i = sensorArgs.SensorData.Length / 2; i < sensorArgs.SensorData.Length; i++)
+		    var start = (sensorArgs.Time <= 50) ? 0 : sensorArgs.SensorData.Length/2;
+            for (var i = start; i < sensorArgs.SensorData.Length; i++)
 			{
 				var value = sensorArgs.SensorData[i];
 				Console.WriteLine($"Time {sensorArgs.Time}; PlotTime {sensorArgs.Time - sensorArgs.SensorData.Length + i};  value {value}");
