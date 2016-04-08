@@ -64,7 +64,7 @@ namespace MotionDetection.ViewModels
             for (var i = start; i < sensorArgs.SensorData.Length; i++)
 			{
 				var value = sensorArgs.SensorData[i];
-				Console.WriteLine($"Time {sensorArgs.Time}; PlotTime {sensorArgs.Time - sensorArgs.SensorData.Length + i};  value {value}");
+				//Console.WriteLine($"Time {sensorArgs.Time}; PlotTime {sensorArgs.Time - sensorArgs.SensorData.Length + i};  value {value}");
 				Series.Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
 				++i;
 			}

@@ -113,6 +113,10 @@ namespace MotionDetection.Models
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							_buffer[tr, i, time] = valore; // Memorizzazione
+						    if (tr == 9 && i == 0)
+						    {
+						        Console.WriteLine($"time \t {time} \t valore \t {_buffer[tr, i, time]}");
+						    }
 							t[i] += 4;
 						}
 					}
@@ -121,12 +125,14 @@ namespace MotionDetection.Models
 					if (time == 50)
 					{
 						_dataManipulator.GlobalTime = time;
+                        
 						await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
 					}
 					if (time != 0 && time > 50 && time % (Time -StaticBufferTime) == 0)
 					{
 						_dataManipulator.GlobalTime = time;
-						await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
+                        
+                        await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
 					}
 
 					// Lettura pacchetto seguente

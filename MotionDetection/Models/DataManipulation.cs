@@ -7,6 +7,13 @@ namespace MotionDetection.Models
 {
 	public delegate void OnDataReceivedHandler(object sender, DataEventArgs eventArgs);
 
+    public struct EulerAngles
+    {
+        public double Roll { get; set; }
+        public double Pitch { get; set; }
+        public double Yaw { get; set; }
+    }
+
 	public class DataManipulation
 	{
 	    private const int STDWindow = 7;
@@ -36,27 +43,42 @@ namespace MotionDetection.Models
 				{
 					for (var k = 0; k < _buffer.Time; k++)
 					{
-						//_buffer[i, j, k] = circularBuffer[i, j, k];
-						var sum = 0.0;
-						var start = FirstIndex(k, windowSize);
-						var stop = LastIndex(k, windowSize, circularBuffer.Time);
+                        _buffer[i, j, k] = circularBuffer[i, j, k];
+                        //var sum = 0.0;
+                        //var start = FirstIndex(k, windowSize);
+                        //var stop = LastIndex(k, windowSize, circularBuffer.Time);
 
-						for (var h = start; h <= stop; ++h)
-						{
-							//var msg = $"Start {start}, Stop {stop}, H {h}";
-							//MessageBox.Show(msg);
-							sum = sum + circularBuffer[i, j, h];
-						}
-						_buffer[i, j, k] = sum / (stop - start + 1);
-					}
+                        //for (var h = start; h <= stop; ++h)
+                        //{
+                        //	//var msg = $"Start {start}, Stop {stop}, H {h}";
+                        //	//MessageBox.Show(msg);
+                        //	sum = sum + circularBuffer[i, j, h];
+                        //}
+                        //_buffer[i, j, k] = sum / (stop - start + 1);
+                    }
 				}
 			}
 
-		    var modulo = Modulo(_buffer.GetSubArray(0, 0), _buffer.GetSubArray(1, 0), _buffer.GetSubArray(2, 0));
-			var std = StandardDeviation(modulo);
+
+            //Test
+            var modulo = Modulo(_buffer.GetSubArray(0, 0), _buffer.GetSubArray(1, 0), _buffer.GetSubArray(2, 0));
+			//var std = StandardDeviation(modulo);
+		    var eul = EulerAnglesComputation(_buffer.GetSubArray(9, 0), _buffer.GetSubArray(10, 0), _buffer.GetSubArray(11, 0),
+		        _buffer.GetSubArray(12, 0));
+
+            
+            double [] rolls = new double[eul.Length];
+		    int index = 0;
+		    foreach (var element in eul)
+		    {
+		        rolls[index] = element.Roll;
+		        ++index;
+		    }
+            //EndTest
+
 			var dataArgs = new DataEventArgs
 			{
-				SensorData = std,
+				SensorData = rolls,
 				Time = GlobalTime
 			};
 			//Console.WriteLine($"Global time = {GlobalTime}");
@@ -99,15 +121,13 @@ namespace MotionDetection.Models
 			for (var i = 0; i < result.Length; ++i)
 			{
 				var start = FirstIndex(i, STDWindow);
-				var segmentSum = new ArraySegment<double>(rawSquare, start, STDWindow).Sum();
-				if (i == 1)
-				{
-					Console.WriteLine(segmentSum.ToString());
-				}
-				var value = (segmentSum - meanSquare[i])/STDWindow;
+			    var stop = LastIndex(i, STDWindow, result.Length);
+			    var width = stop - start + 1;
+                var segmentSum = new ArraySegment<double>(rawSquare, start, width).Sum();
+				var value = segmentSum / width - meanSquare[i];
 				result[i] = Math.Sqrt(value);
 			}
-		    return result;
+		    return result; 
 	    }
 
 	    private double[] Mean(double[] x, int windowSize)
@@ -125,6 +145,22 @@ namespace MotionDetection.Models
                 }
                 result[i] = sum / (stop - start + 1);
             }
+
+	        return result;
+	    }
+
+	    private EulerAngles[] EulerAnglesComputation(double[] q0, double[] q1, double[] q2, double[] q3)
+	    {
+	        var result = new EulerAngles[q0.Length];
+	        for (int i = 0; i < result.Length; ++i)
+	        {
+	            var roll = Math.Atan((2*q2[i]*q3[i] + 2*q0[i]*q1[i])/(2*Math.Pow(q0[i], 2) + 2*Math.Pow(q3[i], 2) - 1));
+	            var pitch = -Math.Asin(2*q1[i]*q3[i] - 2*q0[i]*q2[i]);
+                var yaw = Math.Atan((2 * q1[i] * q2[i] + 2 * q0[i] * q3[i]) / (2 * Math.Pow(q0[i], 2) + 2 * Math.Pow(q1[i], 2) - 1));
+
+	            result[i] = new EulerAngles() {Roll = roll, Pitch = pitch, Yaw = yaw};
+                //Console.WriteLine($"q0 \t {q0[i]} \t roll \t {roll}");
+	        }
 
 	        return result;
 	    }
