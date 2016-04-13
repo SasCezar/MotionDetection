@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -41,21 +42,25 @@ namespace MotionDetection.Models
 			{
 				for (var j = 0; j < _buffer.SensorNumber; j++)
 				{
-					for (var k = 0; k < _buffer.Time; k++)
+					for (var k = 0; k < _buffer.Time; k++) //TODO Gestire indici
 					{
-                        _buffer[i, j, k] = circularBuffer[i, j, k];
-                        //var sum = 0.0;
-                        //var start = FirstIndex(k, windowSize);
-                        //var stop = LastIndex(k, windowSize, circularBuffer.Time);
+						_buffer[i, j, k] = circularBuffer[i, j, (GlobalTime - _buffer.Time) + k];
+						if (i == 9 && j == 0)
+						{
+							Console.WriteLine($"{(GlobalTime - _buffer.Time) + k} \t {_buffer[i,j,k].ToString()}");
+						}
+					//var sum = 0.0;
+						//var start = FirstIndex(k, windowSize);
+						//var stop = LastIndex(k, windowSize, circularBuffer.Time);
 
-                        //for (var h = start; h <= stop; ++h)
-                        //{
-                        //	//var msg = $"Start {start}, Stop {stop}, H {h}";
-                        //	//MessageBox.Show(msg);
-                        //	sum = sum + circularBuffer[i, j, h];
-                        //}
-                        //_buffer[i, j, k] = sum / (stop - start + 1);
-                    }
+						//for (var h = start; h <= stop; ++h)
+						//{
+						//	//var msg = $"Start {start}, Stop {stop}, H {h}";
+						//	//MessageBox.Show(msg);
+						//	sum = sum + circularBuffer[i, j, h];
+						//}
+						//_buffer[i, j, k] = sum / (stop - start + 1);
+					}
 				}
 			}
 
@@ -83,7 +88,7 @@ namespace MotionDetection.Models
 			};
 			//Console.WriteLine($"Global time = {GlobalTime}");
 			NewDataReceived?.Invoke(this, dataArgs);
-			circularBuffer.UpdateReadIndex();
+			//circularBuffer.UpdateReadIndex();
 		}
 
 

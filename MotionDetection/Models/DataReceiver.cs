@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -113,22 +112,15 @@ namespace MotionDetection.Models
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							_buffer[tr, i, time] = valore; // Memorizzazione
-						    if (tr == 9 && i == 0)
-						    {
-						        Console.WriteLine($"time \t {time} \t valore \t {_buffer[tr, i, time]}");
-						    }
+						    //if (tr == 9 && i == 0)
+						    //{
+						    //    Console.WriteLine($"time \t {time} \t valore \t {_buffer[tr, i, time]}");
+						    //}
 							t[i] += 4;
 						}
 					}
 
-					
-					if (time == 50)
-					{
-						_dataManipulator.GlobalTime = time;
-                        
-						await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
-					}
-					if (time != 0 && time > 50 && time % (Time -StaticBufferTime) == 0)
+					if (time > 25 && time % (Time -StaticBufferTime) == 0)
 					{
 						_dataManipulator.GlobalTime = time;
                         
