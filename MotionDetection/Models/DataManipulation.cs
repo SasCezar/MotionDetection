@@ -44,44 +44,47 @@ namespace MotionDetection.Models
 				{
 					for (var k = 0; k < _buffer.Time; k++) //TODO Gestire indici
 					{
-						_buffer[i, j, k] = circularBuffer[i, j, (GlobalTime - _buffer.Time) + k];
-						if (i == 9 && j == 0)
-						{
-							Console.WriteLine($"{(GlobalTime - _buffer.Time) + k} \t {_buffer[i,j,k].ToString()}");
-						}
-					//var sum = 0.0;
-						//var start = FirstIndex(k, windowSize);
-						//var stop = LastIndex(k, windowSize, circularBuffer.Time);
-
-						//for (var h = start; h <= stop; ++h)
+						//_buffer[i, j, k] = circularBuffer[i, j, GlobalTime - _buffer.Time + k];
+						//if (i == 9 && j == 0)
 						//{
-						//	//var msg = $"Start {start}, Stop {stop}, H {h}";
-						//	//MessageBox.Show(msg);
-						//	sum = sum + circularBuffer[i, j, h];
+						//	Console.WriteLine($"{(GlobalTime - _buffer.Time) + k} \t {_buffer[i,j,k].ToString()}");
 						//}
-						//_buffer[i, j, k] = sum / (stop - start + 1);
-					}
+                        var sum = 0.0;
+                        var start = FirstIndex(GlobalTime - _buffer.Time + k, windowSize);
+                        var stop = LastIndex(GlobalTime - _buffer.Time + k, windowSize, GlobalTime);
+					    if (i == 9 && j == 0)
+					    {
+					        Console.WriteLine($"start \t {start} \t stop \t {stop}");
+					    }
+					    for (var h = start; h <= stop; ++h)
+                        {
+                            //var msg = $"Start {start}, Stop {stop}, H {h}";
+                            //MessageBox.Show(msg);
+                            sum = sum + circularBuffer[i, j, h];
+                        }
+                        _buffer[i, j, k] = sum / (stop - start + 1);
+                    }
 				}
 			}
 
 
             //Test
             var modulo = Modulo(_buffer.GetSubArray(0, 0), _buffer.GetSubArray(1, 0), _buffer.GetSubArray(2, 0));
-			//var std = StandardDeviation(modulo);
-		    var eul = EulerAnglesComputation(_buffer.GetSubArray(9, 0), _buffer.GetSubArray(10, 0), _buffer.GetSubArray(11, 0),
-		        _buffer.GetSubArray(12, 0));
+            //var std = StandardDeviation(modulo);
+            var eul = EulerAnglesComputation(_buffer.GetSubArray(9, 0), _buffer.GetSubArray(10, 0), _buffer.GetSubArray(11, 0),
+                _buffer.GetSubArray(12, 0));
 
-            
-            double [] rolls = new double[eul.Length];
-		    int index = 0;
-		    foreach (var element in eul)
-		    {
-		        rolls[index] = element.Roll;
-		        ++index;
-		    }
+
+            double[] rolls = new double[eul.Length];
+            int index = 0;
+            foreach (var element in eul)
+            {
+                rolls[index] = element.Roll;
+                ++index;
+            }
             //EndTest
 
-			var dataArgs = new DataEventArgs
+            var dataArgs = new DataEventArgs
 			{
 				SensorData = rolls,
 				Time = GlobalTime
@@ -159,9 +162,9 @@ namespace MotionDetection.Models
 	        var result = new EulerAngles[q0.Length];
 	        for (int i = 0; i < result.Length; ++i)
 	        {
-	            var roll = Math.Atan((2*q2[i]*q3[i] + 2*q0[i]*q1[i])/(2*Math.Pow(q0[i], 2) + 2*Math.Pow(q3[i], 2) - 1));
+	            var roll = Math.Atan2(2*q2[i]*q3[i] + 2*q0[i]*q1[i],2*Math.Pow(q0[i], 2) + 2*Math.Pow(q3[i], 2) - 1);
 	            var pitch = -Math.Asin(2*q1[i]*q3[i] - 2*q0[i]*q2[i]);
-                var yaw = Math.Atan((2 * q1[i] * q2[i] + 2 * q0[i] * q3[i]) / (2 * Math.Pow(q0[i], 2) + 2 * Math.Pow(q1[i], 2) - 1));
+                var yaw = Math.Atan2(2 * q1[i] * q2[i] + 2 * q0[i] * q3[i] , 2 * Math.Pow(q0[i], 2) + 2 * Math.Pow(q1[i], 2) - 1);
 
 	            result[i] = new EulerAngles() {Roll = roll, Pitch = pitch, Yaw = yaw};
                 //Console.WriteLine($"q0 \t {q0[i]} \t roll \t {roll}");
@@ -172,7 +175,7 @@ namespace MotionDetection.Models
 
 		private static int FirstIndex(int i, int width)
 		{
-			return ((i - width)/2) > 0 ? ((i - width)/2) : 0;
+			return (i - width/2) > 0 ? (i - width/2) : 0;
 
 		}
 
@@ -182,7 +185,7 @@ namespace MotionDetection.Models
 			{
 				return i + width/2;
 			}
-			return size - 1;
+			return size;
 		}
 	}
 }

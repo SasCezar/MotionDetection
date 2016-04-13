@@ -124,7 +124,7 @@ namespace MotionDetection.Models
 					{
 						_dataManipulator.GlobalTime = time;
                         
-                        await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 5));
+                        await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 7));
 					}
 
 					// Lettura pacchetto seguente
