@@ -69,30 +69,28 @@ namespace MotionDetection.Models
 
 
             //Test
-            var modulo = Modulo(_buffer.GetSubArray(0, 0), _buffer.GetSubArray(1, 0), _buffer.GetSubArray(2, 0));
-            //var std = StandardDeviation(modulo);
-            var eul = EulerAnglesComputation(_buffer.GetSubArray(9, 0), _buffer.GetSubArray(10, 0), _buffer.GetSubArray(11, 0),
-                _buffer.GetSubArray(12, 0));
+            //modulo accelerometri
+            var moduloAccelerometers = Modulo(_buffer.GetSubArray(0, 0), _buffer.GetSubArray(1, 0), _buffer.GetSubArray(2, 0));
+            //acc giroscopi
+		    var moduloGyroscopes = Modulo(_buffer.GetSubArray(3, 1), _buffer.GetSubArray(4, 1), _buffer.GetSubArray(5, 1));
 
-
-            double[] rolls = new double[eul.Length];
-            int index = 0;
-            foreach (var element in eul)
-            {
-                rolls[index] = element.Roll;
-                ++index;
-            }
+       
             //EndTest
 
-            var dataArgs = new DataEventArgs
+            var dataArgsAccelerometers = new DataEventArgs
 			{
-				SensorData = rolls,
+				SensorData = moduloAccelerometers,
 				Time = GlobalTime
 			};
-			//Console.WriteLine($"Global time = {GlobalTime}");
-			NewDataReceived?.Invoke(this, dataArgs);
-			//circularBuffer.UpdateReadIndex();
-		}
+			NewDataReceived?.Invoke(this, dataArgsAccelerometers);
+
+            var dataArgsGyroscopes = new DataEventArgs
+            {
+                SensorData = moduloAccelerometers,
+                Time = GlobalTime
+            };
+            NewDataReceived    ?.Invoke(this, dataArgsGyroscopes);
+        }
 
 
         // TODO Rewrite Modulo method to return a double[] and accept vectors
