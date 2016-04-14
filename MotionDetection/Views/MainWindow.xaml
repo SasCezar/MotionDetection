@@ -12,21 +12,41 @@
     </Window.DataContext>
 
     <Grid>
-        <oxy:PlotView Margin="10,0,227,0" Model="{Binding MyModel}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="780*" />
+            <ColumnDefinition Width="240*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="430*" />
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.RowSpan="2" Margin="0,0,8.0,0">
+            <TabItem Header="Sensor 1">
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorOne}" />
+            </TabItem>
+            <TabItem Header="Sensor 2">
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorTwo}" />
+            </TabItem>
+            <TabItem Header="Sensor 3">
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorThree}" />
+            </TabItem>
+            <TabItem Header="Sensor 4">
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorFour}" />
+            </TabItem>
+            <TabItem Header="Sensor 5">
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorFive}" />
+            </TabItem>
+        </TabControl>
+
         <Button x:Name="ConnectButton"
-                Width="200"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1"
                 Height="110"
-                Margin="795,40,0,0"
-                HorizontalAlignment="Left"
+                Margin="15.917,23,23.4,0"
                 VerticalAlignment="Top"
                 Command="{Binding Command}"
                 Content="Button" />
-
-        <ListBox x:Name="ListBox"
-                 Width="200"
-                 Height="265"
-                 Margin="795,165,0,0"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Top" />
     </Grid>
 </Window>

@@ -28,9 +28,17 @@ namespace MotionDetection.Models
 		Sensor5,
 	}
 
+	public enum SeriesType
+	{
+		ModAcceleration,
+		ModGyroscopes,
+		Turning,
+		DeadReckoning,
+	}
+
 	public class DataEventArgs : EventArgs
 	{
-		public SensorTypeEnum SensorType;
+		public SeriesType SeriesType;
 		public SensorNumber SensorNumber;
 		public double[] SensorData;
 		public int Time;

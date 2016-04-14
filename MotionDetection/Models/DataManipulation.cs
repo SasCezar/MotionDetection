@@ -52,10 +52,6 @@ namespace MotionDetection.Models
                         var sum = 0.0;
                         var start = FirstIndex(GlobalTime - _buffer.Time + k, windowSize);
                         var stop = LastIndex(GlobalTime - _buffer.Time + k, windowSize, GlobalTime);
-					    if (i == 9 && j == 0)
-					    {
-					        Console.WriteLine($"start \t {start} \t stop \t {stop}");
-					    }
 					    for (var h = start; h <= stop; ++h)
                         {
                             //var msg = $"Start {start}, Stop {stop}, H {h}";
@@ -72,25 +68,27 @@ namespace MotionDetection.Models
             //modulo accelerometri
             var moduloAccelerometers = Modulo(_buffer.GetSubArray(0, 0), _buffer.GetSubArray(1, 0), _buffer.GetSubArray(2, 0));
             //acc giroscopi
-		    var moduloGyroscopes = Modulo(_buffer.GetSubArray(3, 1), _buffer.GetSubArray(4, 1), _buffer.GetSubArray(5, 1));
+		    var moduloGyroscopes = Modulo(_buffer.GetSubArray(3, 0), _buffer.GetSubArray(4, 0), _buffer.GetSubArray(5, 0));
 
        
             //EndTest
 
             var dataArgsAccelerometers = new DataEventArgs
 			{
+				SeriesType = SeriesType.ModAcceleration,
 				SensorData = moduloAccelerometers,
 				Time = GlobalTime
 			};
 			NewDataReceived?.Invoke(this, dataArgsAccelerometers);
 
-            var dataArgsGyroscopes = new DataEventArgs
+			var dataArgsGyroscopes = new DataEventArgs
             {
-                SensorData = moduloAccelerometers,
+				SeriesType = SeriesType.ModGyroscopes,
+                SensorData = moduloGyroscopes,
                 Time = GlobalTime
             };
-            NewDataReceived    ?.Invoke(this, dataArgsGyroscopes);
-        }
+			NewDataReceived?.Invoke(this, dataArgsGyroscopes);
+		}
 
 
         // TODO Rewrite Modulo method to return a double[] and accept vectors
@@ -165,7 +163,6 @@ namespace MotionDetection.Models
                 var yaw = Math.Atan2(2 * q1[i] * q2[i] + 2 * q0[i] * q3[i] , 2 * Math.Pow(q0[i], 2) + 2 * Math.Pow(q1[i], 2) - 1);
 
 	            result[i] = new EulerAngles() {Roll = roll, Pitch = pitch, Yaw = yaw};
-                //Console.WriteLine($"q0 \t {q0[i]} \t roll \t {roll}");
 	        }
 
 	        return result;
@@ -174,7 +171,6 @@ namespace MotionDetection.Models
 		private static int FirstIndex(int i, int width)
 		{
 			return (i - width/2) > 0 ? (i - width/2) : 0;
-
 		}
 
 		private static int LastIndex(int i, int width, int size)

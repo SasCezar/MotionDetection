@@ -12,7 +12,10 @@ namespace MotionDetection.ViewModels
 {
 	public class ViewModelWindow
 	{
-		public LineSeries Series;
+		public LineSeries ModAccLineSeries;
+		public LineSeries ModGyrLineSeries;
+
+		public LineSeries[] AllLineSeries;
 
 		public ViewModelWindow()
 		{
@@ -25,38 +28,48 @@ namespace MotionDetection.ViewModels
 			DataManipulator = dataManipulator;
 			DataManipulator.NewDataReceived += OnDataReceived;
 			// TODO Add multiple models (one model for each plot) with multiple series
-			MyModel = new PlotModel
+			SensorOne = new PlotModel
 			{
 				Title = "Example"
 			};
 
-			Points = new List<DataPoint>();
+			PointsAcc = new List<DataPoint>();
+			PointsGyr = new List<DataPoint>();
 
-			MyModel.Axes.Add(new LinearAxis
+			SensorOne.Axes.Add(new LinearAxis
 			{
 				Position = AxisPosition.Bottom,
 				Minimum = 0
 			});
 
-			MyModel.Axes.Add(new LinearAxis
+			SensorOne.Axes.Add(new LinearAxis
 			{
 				Position = AxisPosition.Left
 			});
 
-			Series = new LineSeries
+			ModAccLineSeries = new LineSeries
 			{
-				Title = "Accelerometro"
+				Title = "Modulo Accelerometri",
+
 			};
-			MyModel.Series.Add(Series);
+			ModGyrLineSeries = new LineSeries
+			{
+				Title = "Modulo Giroscopi",
+			};
+			SensorOne.Series.Add(ModAccLineSeries);
+			SensorOne.Series.Add(ModGyrLineSeries);
+			AllLineSeries = new[] {ModAccLineSeries, ModGyrLineSeries};
+
 		}
 
 		public DataManipulation DataManipulator { get; set; }
 
-		public PlotModel MyModel { get; set; }
+		public PlotModel SensorOne { get; set; }
 
 		public ConnectionCommand Command { get; set; }
 
-		public IList<DataPoint> Points { get; set; }
+		public IList<DataPoint> PointsAcc { get; set; }
+		public IList<DataPoint> PointsGyr { get; set; }
 
 		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
 		{
@@ -64,11 +77,18 @@ namespace MotionDetection.ViewModels
             for (var i = start; i < sensorArgs.SensorData.Length; i++)
 			{
 				var value = sensorArgs.SensorData[i];
-				//Console.WriteLine($"Time {sensorArgs.Time}; PlotTime {sensorArgs.Time - sensorArgs.SensorData.Length + i};  value {value}");
-				Series.Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
+				//AllLineSeries[(int)sensorArgs.SeriesType].Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
+				if ((int) sensorArgs.SeriesType == 0)
+				{
+					ModAccLineSeries.Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
+				}
+				else
+				{
+					ModGyrLineSeries.Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
+				}
 				++i;
 			}
-			MyModel.InvalidatePlot(true);
+			SensorOne.InvalidatePlot(true);
 		}
 	}
 }
