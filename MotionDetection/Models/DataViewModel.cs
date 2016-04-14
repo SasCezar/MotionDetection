@@ -19,17 +19,19 @@ namespace MotionDetection.Models
 		Quaternion3
 	}
 
-	public struct DataViewModel
+	public enum SensorNumber
 	{
-		public int SensorNumber { get; set; }
-		public float Value { get; set; }
-		public int Time { get; set; }
-		public SensorTypeEnum SensorType { get; set; }
+		Sensor1,
+		Sensor2,
+		Sensor3,
+		Sensor4,
+		Sensor5,
 	}
 
-	// TODO? Convert to and array of SensorData
 	public class DataEventArgs : EventArgs
 	{
+		public SensorTypeEnum SensorType;
+		public SensorNumber SensorNumber;
 		public double[] SensorData;
 		public int Time;
 	}
