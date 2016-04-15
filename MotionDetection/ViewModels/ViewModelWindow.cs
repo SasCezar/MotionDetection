@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows.Interop;
 using MotionDetection.Commands;
 using MotionDetection.Models;
 using OxyPlot;
@@ -12,14 +9,10 @@ namespace MotionDetection.ViewModels
 {
 	public class ViewModelWindow
 	{
-		public LineSeries ModAccLineSeries;
-		public LineSeries ModGyrLineSeries;
-
-		public LineSeries[] AllLineSeries;
+		public LineSeries[][] SensorsLineSeries;
 
 		public ViewModelWindow()
 		{
-			
 		}
 
 		public ViewModelWindow(ConnectionCommand command, DataManipulation dataManipulator)
@@ -27,68 +20,59 @@ namespace MotionDetection.ViewModels
 			Command = command;
 			DataManipulator = dataManipulator;
 			DataManipulator.NewDataReceived += OnDataReceived;
-			// TODO Add multiple models (one model for each plot) with multiple series
-			SensorOne = new PlotModel
+
+			var numOfSeries = Enum.GetNames(typeof (SeriesType)).Length;
+			SensorsModels = new PlotModel[5];
+			SensorsLineSeries = new LineSeries[5][];
+
+			for (var i = 0; i < 5; i++)
 			{
-				Title = "Example"
-			};
+				SensorsModels[i] = new PlotModel
+				{
+					Title = $"Sensor {i + 1}"
+				};
+				SensorsModels[i].Axes.Add(new LinearAxis
+				{
+					Position = AxisPosition.Bottom,
+					Minimum = 0
+				});
+				SensorsModels[i].Axes.Add(new LinearAxis
+				{
+					Position = AxisPosition.Left
+				});
 
-			PointsAcc = new List<DataPoint>();
-			PointsGyr = new List<DataPoint>();
-
-			SensorOne.Axes.Add(new LinearAxis
-			{
-				Position = AxisPosition.Bottom,
-				Minimum = 0
-			});
-
-			SensorOne.Axes.Add(new LinearAxis
-			{
-				Position = AxisPosition.Left
-			});
-
-			ModAccLineSeries = new LineSeries
-			{
-				Title = "Modulo Accelerometri",
-
-			};
-			ModGyrLineSeries = new LineSeries
-			{
-				Title = "Modulo Giroscopi",
-			};
-			SensorOne.Series.Add(ModAccLineSeries);
-			SensorOne.Series.Add(ModGyrLineSeries);
-			AllLineSeries = new[] {ModAccLineSeries, ModGyrLineSeries};
-
+				SensorsLineSeries[i] = new LineSeries[numOfSeries];
+				for (var j = 0; j < numOfSeries; j++)
+				{
+					var title = ((SeriesType) j).ToString();
+					SensorsLineSeries[i][j] = new LineSeries
+					{
+						Title = title
+					};
+					SensorsModels[i].Series.Add(SensorsLineSeries[i][j]);
+				}
+			}
 		}
+
+		public PlotModel[] SensorsModels { get; set; }
 
 		public DataManipulation DataManipulator { get; set; }
 
-		public PlotModel SensorOne { get; set; }
-
 		public ConnectionCommand Command { get; set; }
 
-		public IList<DataPoint> PointsAcc { get; set; }
-		public IList<DataPoint> PointsGyr { get; set; }
 
 		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
 		{
-		    var start = (sensorArgs.Time <= 50) ? 0 : sensorArgs.SensorData.Length/2;
-            for (var i = start; i < sensorArgs.SensorData.Length; i++)
+			var start = sensorArgs.Time <= 50 ? 0 : sensorArgs.SensorData.Length/2;
+			for (var i = start; i < sensorArgs.SensorData.Length; i++)
 			{
 				var value = sensorArgs.SensorData[i];
-				//AllLineSeries[(int)sensorArgs.SeriesType].Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
-				if ((int) sensorArgs.SeriesType == 0)
-				{
-					ModAccLineSeries.Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
-				}
-				else
-				{
-					ModGyrLineSeries.Points.Add(new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
-				}
+				SensorsLineSeries[(int) sensorArgs.SensorNumber][(int) sensorArgs.SeriesType].Points.Add(
+					new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
+
 				++i;
 			}
-			SensorOne.InvalidatePlot(true);
+			SensorsModels[(int) sensorArgs.SensorNumber].InvalidatePlot(true);
 		}
 	}
 }

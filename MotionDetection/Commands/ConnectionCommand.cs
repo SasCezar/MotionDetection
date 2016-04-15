@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MotionDetection.Models;
@@ -18,6 +19,7 @@ namespace MotionDetection.Commands
 		{
 			//throw new NotImplementedException();
 			return true;
+			//return !Receiver.Socket.Poll(20000,SelectMode.SelectRead);
 		}
 
 		public async void Execute(object parameter)

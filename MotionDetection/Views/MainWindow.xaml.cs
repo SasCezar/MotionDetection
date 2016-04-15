@@ -12,8 +12,6 @@ namespace MotionDetection.Views
 		{
 			InitializeComponent();
 			DataContext = viewModel;
-		
 		}
-
 	}
 }

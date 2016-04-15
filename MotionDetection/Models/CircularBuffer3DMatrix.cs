@@ -7,12 +7,10 @@ namespace MotionDetection.Models
 {
 	public class CircularBuffer3DMatrix<T> : Buffer3DMatrix<T>
 	{
-		private readonly int _offset;
 		public int GlobalTime { get; set; }
 
 		public CircularBuffer3DMatrix(int sensorType, int sensorNumber, int time) : base(sensorType, sensorNumber,time)
 		{
-			_offset = Time/3;
 			GlobalTime = 0;
 		}
 

@@ -23,19 +23,19 @@
 
         <TabControl Grid.RowSpan="2" Margin="0,0,8.0,0">
             <TabItem Header="Sensor 1">
-                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorOne}" />
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorsModels[0]}" />
             </TabItem>
             <TabItem Header="Sensor 2">
-                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorTwo}" />
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorsModels[1]}" />
             </TabItem>
             <TabItem Header="Sensor 3">
-                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorThree}" />
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorsModels[2]}" />
             </TabItem>
             <TabItem Header="Sensor 4">
-                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorFour}" />
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorsModels[3]}" />
             </TabItem>
             <TabItem Header="Sensor 5">
-                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorFive}" />
+                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorsModels[4]}" />
             </TabItem>
         </TabControl>
 

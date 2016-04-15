@@ -15,6 +15,8 @@ namespace MotionDetection.Models
 		private CircularBuffer3DMatrix<double> _buffer; // Creazione Buffer
 		private DataManipulation _dataManipulator;
 
+		public Socket Socket { get; private set; }
+
 		public DataReceiver(DataManipulation dataManipulator)
 		{
 			_dataManipulator = dataManipulator;
@@ -26,9 +28,9 @@ namespace MotionDetection.Models
 			var ep = new IPEndPoint(IPAddress.Any, 45555);
 			var listener = new TcpListener(ep);
 			listener.Start();
-			var socket = listener.AcceptSocket();
+			Socket = listener.AcceptSocket();
 			var socketClientThread = new Thread(Read);
-			socketClientThread.Start(socket);
+			socketClientThread.Start(Socket);
 		}
 
 		public async void Read(object obj)

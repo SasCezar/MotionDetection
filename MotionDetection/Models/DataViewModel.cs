@@ -2,7 +2,7 @@
 
 namespace MotionDetection.Models
 {
-	public enum SensorTypeEnum
+	public enum SensorType
 	{
 		Accelerometer1,
 		Accelerometer2,

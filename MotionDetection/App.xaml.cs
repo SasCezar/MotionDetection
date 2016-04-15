@@ -15,7 +15,6 @@ namespace MotionDetection
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
-		
 			// Step 1 - Load the splash screen 
 			var splash = new SplashScreen("Resources/SplashScreen.tif");
 			splash.Show(false, true);
@@ -27,7 +26,7 @@ namespace MotionDetection
 			// Step 3 - Load your windows but don't show it yet 
 			//base.OnStartup(e);
 			//var main = new MainWindow();
-	
+
 			// Step 4 - Make sure that the splash screen lasts at least two seconds 
 			timer.Stop();
 			var remainingTimeToShowSplash = MINIMUM_SPLASH_TIME - (int) timer.ElapsedMilliseconds;
@@ -36,7 +35,7 @@ namespace MotionDetection
 
 			// Step 5 - show the page 
 			splash.Close(TimeSpan.FromMilliseconds(SPLASH_FADE_TIME));
-			Main main = new Main();
+			var main = new Main();
 		}
 	}
 }
