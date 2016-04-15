@@ -38,8 +38,8 @@ namespace MotionDetection.Models
 
 	public class DataEventArgs : EventArgs
 	{
-		public SeriesType SeriesType;
-		public SensorNumber SensorNumber;
+		public int SeriesType;
+		public int SensorNumber;
 		public double[] SensorData;
 		public int Time;
 	}
