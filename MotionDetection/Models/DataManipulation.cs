@@ -58,6 +58,21 @@ namespace MotionDetection.Models
 			//acc giroscopi
 			var moduloGyroscopes = Modulo(_buffer.GetSubArray(3, 0), _buffer.GetSubArray(4, 0), _buffer.GetSubArray(5, 0));
 
+			//modulo accelerometri
+			var moduloAccelerometers1 = Modulo(_buffer.GetSubArray(0, 1), _buffer.GetSubArray(1, 1), _buffer.GetSubArray(2, 1));
+			//acc giroscopi
+			var moduloGyroscopes1 = Modulo(_buffer.GetSubArray(3, 1), _buffer.GetSubArray(4, 1), _buffer.GetSubArray(5, 1));
+			//modulo accelerometri
+
+			var moduloAccelerometers2 = Modulo(_buffer.GetSubArray(0, 2), _buffer.GetSubArray(1, 2), _buffer.GetSubArray(2, 2));
+			//acc giroscopi
+			var moduloGyroscopes2 = Modulo(_buffer.GetSubArray(3, 2), _buffer.GetSubArray(4, 2), _buffer.GetSubArray(5, 2));
+			//modulo accelerometri
+
+			var moduloAccelerometers3 = Modulo(_buffer.GetSubArray(0, 3), _buffer.GetSubArray(1, 3), _buffer.GetSubArray(2, 3));
+			//acc giroscopi
+			var moduloGyroscopes3 = Modulo(_buffer.GetSubArray(3, 3), _buffer.GetSubArray(4, 3), _buffer.GetSubArray(5, 3));
+
 			var dataArgsAccelerometers = new DataEventArgs
 			{
 				SensorNumber = SensorNumber.Sensor1,
@@ -69,12 +84,67 @@ namespace MotionDetection.Models
 
 			var dataArgsGyroscopes = new DataEventArgs
 			{
-				SensorNumber = SensorNumber.Sensor2,
+				SensorNumber = SensorNumber.Sensor1,
 				SeriesType = SeriesType.ModGyroscopes,
 				SensorData = moduloGyroscopes,
 				Time = GlobalTime
 			};
 			NewDataReceived?.Invoke(this, dataArgsGyroscopes);
+
+			var dataArgsAccelerometers1 = new DataEventArgs
+			{
+				SensorNumber = SensorNumber.Sensor2,
+				SeriesType = SeriesType.ModAcceleration,
+				SensorData = moduloAccelerometers1,
+				Time = GlobalTime
+			};
+			NewDataReceived?.Invoke(this, dataArgsAccelerometers1);
+
+			var dataArgsGyroscopes1 = new DataEventArgs
+			{
+				SensorNumber = SensorNumber.Sensor2,
+				SeriesType = SeriesType.ModGyroscopes,
+				SensorData = moduloGyroscopes1,
+				Time = GlobalTime
+			};
+			NewDataReceived?.Invoke(this, dataArgsGyroscopes1);
+
+			var dataArgsAccelerometers2 = new DataEventArgs
+			{
+				SensorNumber = SensorNumber.Sensor3,
+				SeriesType = SeriesType.ModAcceleration,
+				SensorData = moduloAccelerometers2,
+				Time = GlobalTime
+			};
+			NewDataReceived?.Invoke(this, dataArgsAccelerometers2);
+
+			var dataArgsGyroscopes2 = new DataEventArgs
+			{
+				SensorNumber = SensorNumber.Sensor3,
+				SeriesType = SeriesType.ModGyroscopes,
+				SensorData = moduloGyroscopes2,
+				Time = GlobalTime
+			};
+			NewDataReceived?.Invoke(this, dataArgsGyroscopes2);
+
+			var dataArgsAccelerometers3 = new DataEventArgs
+			{
+				SensorNumber = SensorNumber.Sensor4,
+				SeriesType = SeriesType.ModAcceleration,
+				SensorData = moduloAccelerometers3,
+				Time = GlobalTime
+			};
+			NewDataReceived?.Invoke(this, dataArgsAccelerometers3);
+
+			var dataArgsGyroscopes3 = new DataEventArgs
+			{
+				SensorNumber = SensorNumber.Sensor4,
+				SeriesType = SeriesType.ModGyroscopes,
+				SensorData = moduloGyroscopes3,
+				Time = GlobalTime
+			};
+			NewDataReceived?.Invoke(this, dataArgsGyroscopes3);
+
 		}
 
 		public static double[] Modulo(double[] x, double[] y, double[] z)
