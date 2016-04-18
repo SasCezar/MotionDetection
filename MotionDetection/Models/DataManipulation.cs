@@ -60,34 +60,43 @@ namespace MotionDetection.Models
 
 		public async void ProcessData()
 		{
-			for (var i = 0; i < 5; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				var tasks = createTask(i);
-				while (tasks.Count > 0)
+				// Identify the first task that completes
+				foreach (var task in tasks)
 				{
-					// Identify the first task that completes.
-					var firstFinishedTask = await Task.WhenAny(tasks);
+					task.RunSynchronously();
+				}
+				var allResults = await Task.WhenAll(tasks);
+				//var firstFinishedTask = await Task.WhenAny(tasks);
 
-					// ***Remove the selected task from the list so that you don't
-					// process it more than once.
-					tasks.Remove(firstFinishedTask);
-
-					// Await the completed task.
-					var result = await firstFinishedTask;
-
+		
+				// ***Remove the selected task from the list so that you don't
+				// process it more than once.
+				//asks.Remove(firstFinishedTask);
+			
+				// Await the completed task.
+				//var result = await firstFinishedTask;
+				var taskIndex = 0;
+			
+				foreach (var result in allResults)
+				{
+	
 					var dataArgsAccelerometers = new DataEventArgs
 					{
 						SensorNumber = i,
-						SeriesType = firstFinishedTask.Id,
+						SeriesType = taskIndex,
 						SensorData = result,
 						Time = GlobalTime
 					};
 					NewDataReceived?.Invoke(this, dataArgsAccelerometers);
+					taskIndex++;
 				}
 			}
 		}
 
-		public List<Task<double[]>> createTask(int sensorNumber)
+		public IEnumerable<Task<double[]>> createTask(int sensorNumber)
 		{
 			var tasks = new List<Task<double[]>>();
 			var modAccTask = new Task<double[]>(() => Modulo(_buffer.GetSubArray((int)SensorType.Accelerometer1, sensorNumber),
