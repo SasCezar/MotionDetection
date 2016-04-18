@@ -107,6 +107,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\MotionRecognition.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\ViewModelWindow.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">

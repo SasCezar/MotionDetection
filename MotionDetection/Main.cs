@@ -13,9 +13,10 @@ namespace MotionDetection
 		{
             // TODO Verify data output
             var dataManipulator = new DataManipulation();
+			var recognition = new MotionRecognition(dataManipulator);
             var dataReceiver = new DataReceiver(dataManipulator);
             var command = new ConnectionCommand(dataReceiver);
-            var viewModel = new ViewModelWindow(command, dataManipulator);
+            var viewModel = new ViewModelWindow(command, dataManipulator, recognition);
             var form = new MainWindow(viewModel);
             form.Show();   
         }

@@ -15,11 +15,12 @@ namespace MotionDetection.ViewModels
 		{
 		}
 
-		public ViewModelWindow(ConnectionCommand command, DataManipulation dataManipulator)
+		public ViewModelWindow(ConnectionCommand command, DataManipulation dataManipulator, MotionRecognition recognition)
 		{
 			Command = command;
 			DataManipulator = dataManipulator;
 			DataManipulator.NewDataReceived += OnDataReceived;
+			recognition.OnMovement += OnDataReceived;
 
 			var numOfSeries = Enum.GetNames(typeof (SeriesType)).Length;
 			SensorsModels = new PlotModel[5];
