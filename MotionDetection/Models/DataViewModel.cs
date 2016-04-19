@@ -43,4 +43,10 @@ namespace MotionDetection.Models
 		public double[] SensorData;
 		public int Time;
 	}
+
+    public class MotionEventArgs : EventArgs
+    {
+        public Boolean[] MotionData;
+        public int Time;
+    }
 }

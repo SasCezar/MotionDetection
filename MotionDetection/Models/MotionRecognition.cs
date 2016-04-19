@@ -1,17 +1,22 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace MotionDetection.Models
 {
 
-	public delegate void MovementHadler(object sender, DataEventArgs eventArgs);
+	public delegate void MovementHadler(object sender, MotionEventArgs eventArgs);
 
 	public class MotionRecognition
 	{
 		public event MovementHadler OnMovement;
 
 		private const int STDWindow = 7;
-		private DataManipulation DataManpulator { get; set; }
+        private const double Threshhold = 0.5;
+        private DataManipulation DataManpulator { get; set; }
+        //TODO buffer circolare
+        private bool[] isMoving = new bool[50];
 
 		public MotionRecognition(DataManipulation dataManipulator)
 		{
@@ -31,11 +36,11 @@ namespace MotionDetection.Models
 					SeriesType = 3,
 					Time = data.Time
 				};
-				OnMovement?.Invoke(this, dataStd);
+				
+                //TODO Call to motion rec mothod
 			}
 		}
 		
-
 		private double[] DifferenceQuotient(double[] x)
 		{
 			var result = new double[x.Length];
@@ -99,5 +104,42 @@ namespace MotionDetection.Models
 			return result;
 		}
 
+	    public void RecognizeStatus(double[] std, int time)
+	    {
+	        int i = time - std.Length;
+	        foreach (var data in std)
+	        {
+	            if (isMoving[i] != null)
+	            {
+	                isMoving[i] = !(data > Threshhold) || (bool) isMoving[i];
+	            }
+	            else
+	            {
+	                isMoving[i] = !(data > Threshhold);
+	            }
+	            ++i;
+	        }
+
+	        if (time > 75 && (time - 25)%50 == 0)
+	        {
+                OnMovement?.Invoke(this, new MotionEventArgs()
+                {
+                    MotionData = isMoving,
+                    Time = time
+                });
+            }
+	    }
+
+	    private async void printMovements(Object sender, MotionEventArgs args)
+	    {
+	        var start = args.Time - 75;
+	        var finish = start + 50;
+	        for (int i = start; i < finish; ++i)
+	        {
+	            var status = args.MotionData[i] == true ? "Movimento" : "Fermo";
+ 	            Console.WriteLine(status);
+	        }
+	       
+	    }
 	}
 }

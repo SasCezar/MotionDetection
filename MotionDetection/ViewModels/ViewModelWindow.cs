@@ -20,7 +20,7 @@ namespace MotionDetection.ViewModels
 			Command = command;
 			DataManipulator = dataManipulator;
 			DataManipulator.NewDataReceived += OnDataReceived;
-			recognition.OnMovement += OnDataReceived;
+			recognition.OnMovement += OnMovementReceived;
 
 			var numOfSeries = Enum.GetNames(typeof (SeriesType)).Length;
 			SensorsModels = new PlotModel[5];
@@ -55,7 +55,12 @@ namespace MotionDetection.ViewModels
 			}
 		}
 
-		public PlotModel[] SensorsModels { get; set; }
+	    private void OnMovementReceived(object sender, MotionEventArgs eventargs)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public PlotModel[] SensorsModels { get; set; }
 
 		public DataManipulation DataManipulator { get; set; }
 
