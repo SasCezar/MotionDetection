@@ -26,6 +26,5 @@ namespace MotionDetection.Models
                 CircularBuffer[sensorType][sensorNumber][time%Time] = value;
 		    }
 		}
-
 	}
 }

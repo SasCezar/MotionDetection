@@ -114,10 +114,6 @@ namespace MotionDetection.Models
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
 							_buffer[tr, i, time] = valore; // Memorizzazione
-						    //if (tr == 9 && i == 0)
-						    //{
-						    //    Console.WriteLine($"time \t {time} \t valore \t {_buffer[tr, i, time]}");
-						    //}
 							t[i] += 4;
 						}
 					}
@@ -126,27 +122,13 @@ namespace MotionDetection.Models
 					{
 						_dataManipulator.GlobalTime = time;
                         
-                        await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 7));
+                        await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 21));
 					}
 
 					// Lettura pacchetto seguente
 					packet = numOfSensors < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
 					time++; // Incremento contatore tempo
 				} while (packet.Length != 0);
-
-				//var csv = new StringBuilder();
-				
-				//for (var i = 0; i < _buffer.SensorType; ++i)
-				//{
-				//	for (var j = 0; j < _buffer.SensorNumber; ++j)
-				//	{
-				//		for (var k = 0; k < _buffer.Time; ++k)
-				//		{
-				//			csv.AppendLine(_buffer[i, j, k].ToString());
-				//		}
-				//	}
-				//}
-				//File.WriteAllText("C:/Users/Cezar Sas/Desktop/BufferTest.csv", csv.ToString());
 			}
 		}
 	}

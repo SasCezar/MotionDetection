@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace MotionDetection.Models
 {
@@ -13,31 +11,23 @@ namespace MotionDetection.Models
 		public event MovementHadler OnMovement;
 
 		private const int STDWindow = 7;
-        private const double Threshhold = 0.5;
+        private const double Threshhold = 0.4;
         private DataManipulation DataManpulator { get; set; }
-        //TODO buffer circolare
-        private bool[] isMoving = new bool[50];
+        private CircularBuffer3DMatrix<bool> isMoving = new CircularBuffer3DMatrix<bool>(1,1,75);
 
 		public MotionRecognition(DataManipulation dataManipulator)
 		{
 			DataManpulator = dataManipulator;
 			DataManpulator.NewDataReceived += OnDataRecived;
+			OnMovement += PrintMovements;
 		}
 
 		public void OnDataRecived(object sender, DataEventArgs data)
 		{
-			if (data.SeriesType == 0)
+			if (data.SeriesType == 0 && data.SensorNumber == 0)
 			{
 				var stdout = StandardDeviation(data.SensorData);
-				var dataStd = new DataEventArgs()
-				{
-					SensorData = stdout,
-					SensorNumber = data.SensorNumber,
-					SeriesType = 3,
-					Time = data.Time
-				};
-				
-                //TODO Call to motion rec mothod
+				RecognizeStatus(stdout, data.Time);
 			}
 		}
 		
@@ -49,7 +39,6 @@ namespace MotionDetection.Models
 			{
 				result[i] = x[i + 1] - x[i];
 			}
-
 			return result;
 		}
 
@@ -109,15 +98,8 @@ namespace MotionDetection.Models
 	        int i = time - std.Length;
 	        foreach (var data in std)
 	        {
-	            if (isMoving[i] != null)
-	            {
-	                isMoving[i] = !(data > Threshhold) || (bool) isMoving[i];
-	            }
-	            else
-	            {
-	                isMoving[i] = !(data > Threshhold);
-	            }
-	            ++i;
+		        isMoving[0,0,i] = (data > Threshhold) || isMoving[0,0,i];
+		        ++i;
 	        }
 
 	        if (time > 75 && (time - 25)%50 == 0)
@@ -130,16 +112,27 @@ namespace MotionDetection.Models
             }
 	    }
 
-	    private async void printMovements(Object sender, MotionEventArgs args)
+		protected void PrintMovements(object sender, MotionEventArgs args)
 	    {
 	        var start = args.Time - 75;
 	        var finish = start + 50;
-	        for (int i = start; i < finish; ++i)
+	        for (var i = start; i < finish; ++i)
 	        {
-	            var status = args.MotionData[i] == true ? "Movimento" : "Fermo";
- 	            Console.WriteLine(status);
+	            var status = args.MotionData[0,0,i] ? "Movimento" : "Fermo";
+ 	            //Console.WriteLine($"Time \t {args.Time} \t {status}");
 	        }
-	       
 	    }
+
+		public double[] RecognizeOrientation(double[] y, double[] z)
+		{
+			double[] result = new double[y.Length];
+
+			for (int i = 0; i < result.Length; i++)
+			{
+				result[i] = Math.Atan2(y[i], z[i]);
+
+			}
+			return result;
+		}
 	}
 }

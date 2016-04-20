@@ -57,7 +57,7 @@ namespace MotionDetection.ViewModels
 
 	    private void OnMovementReceived(object sender, MotionEventArgs eventargs)
 	    {
-	        throw new NotImplementedException();
+	        
 	    }
 
 	    public PlotModel[] SensorsModels { get; set; }

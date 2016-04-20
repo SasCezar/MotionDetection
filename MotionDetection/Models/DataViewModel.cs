@@ -46,7 +46,7 @@ namespace MotionDetection.Models
 
     public class MotionEventArgs : EventArgs
     {
-        public Boolean[] MotionData;
+        public CircularBuffer3DMatrix<bool> MotionData;
         public int Time;
     }
 }
