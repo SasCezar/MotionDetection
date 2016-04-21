@@ -9,7 +9,7 @@ namespace MotionDetection.Models
 	{
 		public int GlobalTime { get; set; }
 
-		public CircularBuffer3DMatrix(int sensorType, int sensorNumber, int time) : base(sensorType, sensorNumber,time)
+		public CircularBuffer3DMatrix(int unityNumber, int sensorType, int time) : base(unityNumber,sensorType, time)
 		{
 			GlobalTime = 0;
 		}

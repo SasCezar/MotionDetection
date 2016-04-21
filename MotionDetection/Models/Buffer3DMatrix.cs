@@ -4,7 +4,7 @@ namespace MotionDetection.Models
 {
 	public class Buffer3DMatrix<T>
 	{
-		private int _sensorNumber = -1;
+		private int _unityNumber = -1;
 		private int _sensorType = -1;
 		private int _time = -1;
 
@@ -12,16 +12,16 @@ namespace MotionDetection.Models
 		{
 		}
 
-		public Buffer3DMatrix(int sensorType, int sensorNumber, int time)
+		public Buffer3DMatrix(int unityNumber, int sensorType, int time)
 		{
 			SensorType = sensorType;
-			SensorNumber = sensorNumber;
+			UnityNumber = unityNumber;
 			Time = time;
 			CircularBuffer = new T[SensorType][][];
 			for (var i = 0; i < SensorType; i++)
 			{
-				CircularBuffer[i] = new T[SensorNumber][];
-				for (var j = 0; j < SensorNumber; j++)
+				CircularBuffer[i] = new T[UnityNumber][];
+				for (var j = 0; j < UnityNumber; j++)
 				{
 					CircularBuffer[i][j] = new T[Time];
 				}
@@ -43,16 +43,16 @@ namespace MotionDetection.Models
 
 		#region Getters
 
-		public int SensorNumber
+		public int UnityNumber
 		{
-			get { return _sensorNumber; }
+			get { return _unityNumber; }
 			set
 			{
-				if (SensorNumber != -1)
+				if (UnityNumber != -1)
 				{
 					throw new Exception("Cannot change buffer size");
 				}
-				_sensorNumber = value;
+				_unityNumber = value;
 			}
 		}
 

@@ -9,9 +9,9 @@ namespace MotionDetection.Models
 {
 	public class DataReceiver
 	{
-		private const int Time = 75;
-		private const int NumSensorType = 13;
-		private const int StaticBufferTime = Time*2/3;
+		private const int CircularBufferSize = 75;
+		private const int numSensorType = 13;
+		private const int StaticBufferSize = CircularBufferSize*2/3;
 		private CircularBuffer3DMatrix<double> _buffer; // Creazione Buffer
 		private DataManipulation _dataManipulator;
 
@@ -65,7 +65,7 @@ namespace MotionDetection.Models
 
 				var packet = tem[2] != 0xFF ? new byte[byteToRead + 4] : new byte[byteToRead + 6];
 
-				var numOfSensors = (byteToRead - 2)/52;
+				var numOfUnity = (byteToRead - 2)/52;
 				packet[0] = 0xFF; // Copia dei primi elementi
 				packet[1] = 0x32;
 				packet[2] = tem[2];
@@ -81,24 +81,24 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-				_buffer = new CircularBuffer3DMatrix<double>(NumSensorType, numOfSensors, Time);
-				_dataManipulator.Buffer = new Buffer3DMatrix<double>(NumSensorType, numOfSensors, StaticBufferTime);
+				_buffer = new CircularBuffer3DMatrix<double>(numOfUnity, numSensorType, CircularBufferSize);
+				_dataManipulator.Buffer = new Buffer3DMatrix<double>(numOfUnity, numSensorType, StaticBufferSize);
 				var t = new int[maxNumberOfSensors];
-				var time = 0;
+				var instant = 0;
 
 				do
 				{
-					for (var x = 0; x < numOfSensors; ++x)
+					for (var x = 0; x < numOfUnity; ++x)
 					{
 						t[x] = 5 + 52*x;
 					}
 
-					for (var i = 0; i < numOfSensors; ++i)
+					for (var i = 0; i < numOfUnity; ++i)
 					{
 						var byteNumber = new byte[4];
-						for (var tr = 0; tr < NumSensorType; ++tr) // 13 campi, 3 * 3 + 4
+						for (var tr = 0; tr < numSensorType; ++tr) // 13 campi, 3 * 3 + 4
 						{
-							if (numOfSensors < 5)
+							if (numOfUnity < 5)
 							{
 								byteNumber[0] = packet[t[i] + 3]; // Lettura inversa
 								byteNumber[1] = packet[t[i] + 2];
@@ -113,21 +113,21 @@ namespace MotionDetection.Models
 								byteNumber[3] = packet[t[i] + 2];
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
-							_buffer[tr, i, time] = valore; // Memorizzazione
+							_buffer[tr, i, instant] = valore; // Memorizzazione
 							t[i] += 4;
 						}
 					}
 
-					if (time > 25 && time % (Time -StaticBufferTime) == 0)
+					if (instant > 25 && instant % (CircularBufferSize -StaticBufferSize) == 0)
 					{
-						_dataManipulator.GlobalTime = time;
+						_dataManipulator.WindowStartTime = instant;
                         
                         await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 21));
 					}
 
 					// Lettura pacchetto seguente
-					packet = numOfSensors < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
-					time++; // Incremento contatore tempo
+					packet = numOfUnity < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
+					instant++; // Incremento contatore tempo
 				} while (packet.Length != 0);
 			}
 		}

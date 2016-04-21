@@ -13,7 +13,7 @@ namespace MotionDetection.Models
 		private const int STDWindow = 7;
         private const double Threshhold = 0.4;
         private DataManipulation DataManpulator { get; set; }
-        private CircularBuffer3DMatrix<bool> isMoving = new CircularBuffer3DMatrix<bool>(1,1,75);
+        private CircularBuffer3DMatrix<bool> isMoving = new CircularBuffer3DMatrix<bool>(1,1, 75);
 
 		public MotionRecognition(DataManipulation dataManipulator)
 		{
@@ -93,21 +93,21 @@ namespace MotionDetection.Models
 			return result;
 		}
 
-	    public void RecognizeStatus(double[] std, int time)
+	    public void RecognizeStatus(double[] std, int startTime)
 	    {
-	        int i = time - std.Length;
+	        int i = startTime - std.Length;
 	        foreach (var data in std)
 	        {
 		        isMoving[0,0,i] = (data > Threshhold) || isMoving[0,0,i];
 		        ++i;
 	        }
 
-	        if (time > 75 && (time - 25)%50 == 0)
+	        if (startTime > 75 && (startTime - 25)%50 == 0)
 	        {
                 OnMovement?.Invoke(this, new MotionEventArgs()
                 {
                     MotionData = isMoving,
-                    Time = time
+                    Time = startTime
                 });
             }
 	    }

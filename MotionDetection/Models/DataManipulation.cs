@@ -32,20 +32,20 @@ namespace MotionDetection.Models
 			}
 		}
 
-		public int GlobalTime { get; set; }
+		public int WindowStartTime { get; set; }
 		public event DataReceivedHandler NewDataReceived;
 
 		public void Smoothing(CircularBuffer3DMatrix<double> circularBuffer, int windowSize)
 		{
 			for (var i = 0; i < _buffer.SensorType; i++)
 			{
-				for (var j = 0; j < _buffer.SensorNumber; j++)
+				for (var j = 0; j < _buffer.UnityNumber; j++)
 				{
 					for (var k = 0; k < _buffer.Time; k++)
 					{
 						var sum = 0.0;
-						var start = FirstIndex(GlobalTime - _buffer.Time + k, windowSize);
-						var stop = LastIndex(GlobalTime - _buffer.Time + k, windowSize, GlobalTime);
+						var start = FirstIndex(WindowStartTime - _buffer.Time + k, windowSize);
+						var stop = LastIndex(WindowStartTime - _buffer.Time + k, windowSize, WindowStartTime);
 						for (var h = start; h <= stop; ++h)
 						{
 							sum = sum + circularBuffer[i, j, h];
@@ -80,7 +80,7 @@ namespace MotionDetection.Models
 						SensorNumber = i,
 						SeriesType = taskIndex,
 						SensorData = result,
-						Time = GlobalTime
+						Time = WindowStartTime
 					};
 					NewDataReceived?.Invoke(this, dataArgsAccelerometers);
 					taskIndex++;
