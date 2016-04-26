@@ -3,24 +3,17 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MotionDetection.Models
 {
+	public delegate void DataReceivedEventHandler(object source, BufferEventArgs<double> eventArgs);
+
 	public class DataReceiver
 	{
-		private const int CircularBufferSize = 75;
-		private const int numSensorType = 13;
-		private const int StaticBufferSize = CircularBufferSize*2/3;
-		private CircularBuffer3DMatrix<double> _buffer; // Creazione Buffer
-		private DataManipulation _dataManipulator;
+		private CircularBuffer3DMatrix<double> _buffer;
 
 		public Socket Socket { get; private set; }
-
-		public DataReceiver(DataManipulation dataManipulator)
-		{
-			_dataManipulator = dataManipulator;
-		}
+		public event DataReceivedEventHandler OnDataReceivedEventHandler;
 
 		// TODO Set socket as a public parameter
 		public void Start()
@@ -81,8 +74,8 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-				_buffer = new CircularBuffer3DMatrix<double>(numOfUnity, numSensorType, CircularBufferSize);
-				_dataManipulator.Buffer = new Buffer3DMatrix<double>(numOfUnity, numSensorType, StaticBufferSize);
+				_buffer = new CircularBuffer3DMatrix<double>(Parameters.NumUnity, Parameters.NumSensor, Parameters.CircularBufferSize);
+
 				var t = new int[maxNumberOfSensors];
 				var instant = 0;
 
@@ -93,36 +86,39 @@ namespace MotionDetection.Models
 						t[x] = 5 + 52*x;
 					}
 
-					for (var i = 0; i < numOfUnity; ++i)
+					for (var unit = 0; unit < Parameters.NumUnity; ++unit)
 					{
 						var byteNumber = new byte[4];
-						for (var tr = 0; tr < numSensorType; ++tr) // 13 campi, 3 * 3 + 4
+						for (var sensor = 0; sensor < Parameters.NumSensor; ++sensor) // 13 campi, 3 * 3 + 4
 						{
 							if (numOfUnity < 5)
 							{
-								byteNumber[0] = packet[t[i] + 3]; // Lettura inversa
-								byteNumber[1] = packet[t[i] + 2];
-								byteNumber[2] = packet[t[i] + 1];
-								byteNumber[3] = packet[t[i]];
+								byteNumber[0] = packet[t[unit] + 3]; // Lettura inversa
+								byteNumber[1] = packet[t[unit] + 2];
+								byteNumber[2] = packet[t[unit] + 1];
+								byteNumber[3] = packet[t[unit]];
 							}
 							else
 							{
-								byteNumber[0] = packet[t[i] + 5];
-								byteNumber[1] = packet[t[i] + 4];
-								byteNumber[2] = packet[t[i] + 3];
-								byteNumber[3] = packet[t[i] + 2];
+								byteNumber[0] = packet[t[unit] + 5];
+								byteNumber[1] = packet[t[unit] + 4];
+								byteNumber[2] = packet[t[unit] + 3];
+								byteNumber[3] = packet[t[unit] + 2];
 							}
 							var valore = BitConverter.ToSingle(byteNumber, 0); // Conversione
-							_buffer[tr, i, instant] = valore; // Memorizzazione
-							t[i] += 4;
+							_buffer[unit, sensor, instant] = valore; // Memorizzazione
+							t[unit] += 4;
 						}
 					}
 
-					if (instant > 25 && instant % (CircularBufferSize -StaticBufferSize) == 0)
+					// In caso non va settare > 25
+					if (instant >= Parameters.StaticBufferSize && instant%(Parameters.CircularBufferSize - Parameters.StaticBufferSize) == 0)
 					{
-						_dataManipulator.WindowStartTime = instant;
-                        
-                        await Task.Factory.StartNew(() => _dataManipulator.Smoothing(_buffer, 21));
+						OnDataReceivedEventHandler?.Invoke(this, new BufferEventArgs<double>
+						{
+							Data = _buffer,
+							Time = instant - Parameters.StaticBufferSize
+						});
 					}
 
 					// Lettura pacchetto seguente

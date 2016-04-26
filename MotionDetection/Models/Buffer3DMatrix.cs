@@ -8,19 +8,15 @@ namespace MotionDetection.Models
 		private int _sensorType = -1;
 		private int _time = -1;
 
-		private Buffer3DMatrix()
-		{
-		}
-
 		public Buffer3DMatrix(int unityNumber, int sensorType, int time)
 		{
 			SensorType = sensorType;
 			UnityNumber = unityNumber;
 			Time = time;
-			CircularBuffer = new T[SensorType][][];
-			for (var i = 0; i < SensorType; i++)
+			CircularBuffer = new T[UnityNumber][][];
+			for (var i = 0; i < UnityNumber; i++)
 			{
-				CircularBuffer[i] = new T[UnityNumber][];
+				CircularBuffer[i] = new T[SensorType][];
 				for (var j = 0; j < UnityNumber; j++)
 				{
 					CircularBuffer[i][j] = new T[Time];
@@ -30,15 +26,15 @@ namespace MotionDetection.Models
 
 		protected T[][][] CircularBuffer { get; set; }
 
-		public T this[int sensorType, int sensorNumber, int time]
+		public T this[int unityNumber, int sensorType, int time]
 		{
-			get { return CircularBuffer[sensorType][sensorNumber][time]; }
-			set { CircularBuffer[sensorType][sensorNumber][time] = value; }
+			get { return CircularBuffer[unityNumber][sensorType][time]; }
+			set { CircularBuffer[unityNumber][sensorType][time] = value; }
 		}
 
-		public T[] GetSubArray(int sensorType, int sensorNumber)
+		public T[] GetSubArray(int unityNumber, int sensorType)
 		{
-			return CircularBuffer[sensorType][sensorNumber];
+			return CircularBuffer[unityNumber][sensorType];
 		}
 
 		#region Getters

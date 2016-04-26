@@ -15,15 +15,15 @@ namespace MotionDetection.Models
 		}
 
 
-		public new T this[int sensorType, int sensorNumber, int time]
+		public new T this[int unityNumber, int sensorType, int time]
 		{
 			get
 			{
-                return CircularBuffer[sensorType][sensorNumber][time%Time];
+                return CircularBuffer[unityNumber][sensorType][time%Time];
 			}
 		    set
 		    {
-                CircularBuffer[sensorType][sensorNumber][time%Time] = value;
+                CircularBuffer[unityNumber][sensorType][time%Time] = value;
 		    }
 		}
 	}

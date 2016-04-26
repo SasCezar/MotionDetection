@@ -11,14 +11,25 @@ namespace MotionDetection
 	{
 		public Main()
 		{
-            // TODO Verify data output
-            var dataManipulator = new DataManipulation();
-			var recognition = new MotionRecognition(dataManipulator);
-            var dataReceiver = new DataReceiver(dataManipulator);
-            var command = new ConnectionCommand(dataReceiver);
-            var viewModel = new ViewModelWindow(command, dataManipulator, recognition);
-            var form = new MainWindow(viewModel);
-            form.Show();   
-        }
+			//         // TODO Verify data output
+			//         var dataManipulator = new DataManipulation();
+			//var recognition = new MotionRecognition(dataManipulator);
+			//         var dataReceiver = new DataReceiver();
+			//         var command = new ConnectionCommand(dataReceiver);
+			//         var viewModel = new ViewModelWindow(command, dataManipulator, recognition);
+			//         var form = new MainWindow(viewModel);
+			//         form.Show(); 
+
+			var dataReceiver = new DataReceiver();
+			var command = new ConnectionCommand(dataReceiver);
+			var signalProcessor = new SignalProcess();
+			dataReceiver.OnDataReceivedEventHandler += signalProcessor.OnDataReceived;
+			var dataProcessor = new DataProcessor();
+			signalProcessor.OnSignalProcessedEventHandler += dataProcessor.OnSignalSmoothed;
+			var viewModel = new ViewModelWindow(command);
+			dataProcessor.OnDataProcessedEventHandeler += viewModel.OnDataProcessed;
+			var form = new MainWindow(viewModel);
+	        form.Show(); 
+		}
 	}
 }

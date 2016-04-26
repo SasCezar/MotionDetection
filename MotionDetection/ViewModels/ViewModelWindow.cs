@@ -15,12 +15,9 @@ namespace MotionDetection.ViewModels
 		{
 		}
 
-		public ViewModelWindow(ConnectionCommand command, DataManipulation dataManipulator, MotionRecognition recognition)
+		public ViewModelWindow(ConnectionCommand command)
 		{
 			Command = command;
-			DataManipulator = dataManipulator;
-			DataManipulator.NewDataReceived += OnDataReceived;
-			recognition.OnMovement += OnMovementReceived;
 
 			var numOfSeries = Enum.GetNames(typeof (SeriesType)).Length;
 			SensorsModels = new PlotModel[5];
@@ -55,26 +52,24 @@ namespace MotionDetection.ViewModels
 			}
 		}
 
-	    private void OnMovementReceived(object sender, MotionEventArgs eventargs)
-	    {
+	    //private void OnMovementReceived(object sender, MotionEventArgs eventargs)
+	    //{
 	        
-	    }
+	    //}
 
 	    public PlotModel[] SensorsModels { get; set; }
-
-		public DataManipulation DataManipulator { get; set; }
 
 		public ConnectionCommand Command { get; set; }
 
 
-		public void OnDataReceived(object sender, DataEventArgs sensorArgs)
+		public void OnDataProcessed(object sender, PlotEventArgs sensorArgs)
 		{
 			var start = sensorArgs.Time <= 50 ? 0 : sensorArgs.SensorData.Length/2;
 			for (var i = start; i < sensorArgs.SensorData.Length; i++)
 			{
 				var value = sensorArgs.SensorData[i];
 				SensorsLineSeries[sensorArgs.SensorNumber][sensorArgs.SeriesType].Points.Add(
-					new DataPoint(sensorArgs.Time - sensorArgs.SensorData.Length + i, value));
+					new DataPoint(sensorArgs.Time + i, value));
 				++i;
 			}
 			SensorsModels[sensorArgs.SensorNumber].InvalidatePlot(true);
