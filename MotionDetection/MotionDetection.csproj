@@ -111,6 +111,7 @@
     <Compile Include="Models\MotionRecognition.cs" />
     <Compile Include="Models\SignalProcess.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Tests\DataTesting.cs" />
     <Compile Include="ViewModels\ViewModelWindow.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

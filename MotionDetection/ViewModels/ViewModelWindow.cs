@@ -23,7 +23,7 @@ namespace MotionDetection.ViewModels
 			SensorsModels = new PlotModel[5];
 			SensorsLineSeries = new LineSeries[5][];
 
-			for (var i = 0; i < 5; i++)
+			for (var i = 0; i < Parameters.NumUnity; i++)
 			{
 				SensorsModels[i] = new PlotModel
 				{

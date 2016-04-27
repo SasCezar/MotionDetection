@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Media;
-
-namespace MotionDetection.Models
+﻿namespace MotionDetection.Models
 {
 	public class CircularBuffer3DMatrix<T> : Buffer3DMatrix<T>
 	{
@@ -13,7 +8,6 @@ namespace MotionDetection.Models
 		{
 			GlobalTime = 0;
 		}
-
 
 		public new T this[int unityNumber, int sensorType, int time]
 		{

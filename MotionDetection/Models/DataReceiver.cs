@@ -120,7 +120,7 @@ namespace MotionDetection.Models
 							Time = instant - Parameters.StaticBufferSize
 						});
 					}
-
+					
 					// Lettura pacchetto seguente
 					packet = numOfUnity < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
 					instant++; // Incremento contatore tempo

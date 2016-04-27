@@ -1,4 +1,6 @@
-﻿namespace MotionDetection.Models
+﻿using System;
+
+namespace MotionDetection.Models
 {
 	public delegate void SignalProcessedEventHandeler(object sender, BufferEventArgs<double> eventArgs);
 
@@ -24,7 +26,8 @@
 					{
 						var sum = 0.0;
 						var start = Utils.FirstIndex(windowStartTime + k, WindowSize);
-						var stop = Utils.LastIndex(windowStartTime + k, WindowSize, windowStartTime);
+						var stop = Utils.LastIndex(windowStartTime + k, WindowSize, windowStartTime + Parameters.StaticBufferSize);
+						//Console.WriteLine($"wst \t {windowStartTime} \t start \t {start} \t stop \t {stop}");
 						for (var h = start; h <= stop; ++h)
 						{
 							sum = sum + circularBuffer[i, j, h];

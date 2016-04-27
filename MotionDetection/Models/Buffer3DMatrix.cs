@@ -10,14 +10,14 @@ namespace MotionDetection.Models
 
 		public Buffer3DMatrix(int unityNumber, int sensorType, int time)
 		{
-			SensorType = sensorType;
 			UnityNumber = unityNumber;
+			SensorType = sensorType;
 			Time = time;
 			CircularBuffer = new T[UnityNumber][][];
 			for (var i = 0; i < UnityNumber; i++)
 			{
 				CircularBuffer[i] = new T[SensorType][];
-				for (var j = 0; j < UnityNumber; j++)
+				for (var j = 0; j < SensorType; j++)
 				{
 					CircularBuffer[i][j] = new T[Time];
 				}
