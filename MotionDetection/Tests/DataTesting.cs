@@ -14,5 +14,20 @@ namespace MotionDetection.Tests
 				Console.WriteLine(data[0,0,eventArgs.Time + i]);
 			}
 		}
+
+		public static void CheckMedian()
+		{
+			var data = new double[50];
+			for (int i = 0; i < 50; i++)
+			{
+				data[i] = i;
+			}
+			var mean = SignalProcess.Median(data, 50);
+			for (int i = 0; i < 50; i++)
+			{
+				Console.WriteLine(mean[i]);
+			}
+		}
+
 	}
 }

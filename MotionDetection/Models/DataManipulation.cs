@@ -26,5 +26,41 @@ namespace MotionDetection.Models
 
 			return result;
 		}
+
+		public static double[] StandardDeviation(double[] x, int windowSize)
+		{
+			var result = new double[x.Length];
+			var rawSquare = x.Select(value => Math.Pow(value, 2)).ToArray();
+			var meanSquare = Enumerable.Select<double, double>(Mean(x, windowSize), value => Math.Pow(value, 2)).ToArray();
+			for (var i = 0; i < result.Length; ++i)
+			{
+				var start = Utils.FirstIndex(i, windowSize);
+				var stop = Utils.LastIndex(i, windowSize, result.Length);
+				var width = stop - start + 1;
+				var segmentSum = new ArraySegment<double>(rawSquare, start, width).Sum();
+				var value = segmentSum / width - meanSquare[i];
+				result[i] = Math.Sqrt(value);
+			}
+			return result;
+		}
+
+		public static double[] Mean(double[] x, int windowSize)
+		{
+			var result = new double[x.Length];
+			for (var i = 0; i < x.Length; i++)
+			{
+				var sum = 0.0;
+				var start = Utils.FirstIndex(i, windowSize);
+				var stop = Utils.LastIndex(i, windowSize, x.Length);
+
+				for (var h = start; h <= stop; ++h)
+				{
+					sum = sum + x[h];
+				}
+				result[i] = sum / (stop - start + 1);
+			}
+
+			return result;
+		}
 	}
 }

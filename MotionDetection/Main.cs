@@ -19,10 +19,13 @@ namespace MotionDetection
 			//dataReceiver.OnDataReceivedEventHandler += DataTesting.OnDataToPrint;
 			var dataProcessor = new DataProcessor();
 			signalProcessor.OnSignalProcessedEventHandler += dataProcessor.OnSignalSmoothed;
+			var motionRecognizer = new MotionRecognition();
+			dataProcessor.OnDataProcessedEventHandeler += motionRecognizer.OnDataRecived;
 			var viewModel = new ViewModelWindow(command);
+			motionRecognizer.OnPlotMovement += viewModel.OnDataProcessed;
 			dataProcessor.OnDataProcessedEventHandeler += viewModel.OnDataProcessed;
 			var form = new MainWindow(viewModel);
-	        form.Show(); 
+			form.Show();
 		}
 	}
 }

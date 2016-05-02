@@ -27,6 +27,12 @@ namespace MotionDetection.Models
 		DeadReckoning,
 	}
 
+	public class MotionEventArgs : EventArgs
+	{
+		public CircularBuffer<bool> MotionData;
+		public int Time;
+	}
+
 	public class PlotEventArgs : EventArgs
 	{
 		public int UnityNumber;
@@ -49,7 +55,7 @@ namespace MotionDetection.Models
 		public static int NumUnity = 5;
 	}
 
-	public class Utils
+	public static class Utils
 	{
 		public static int FirstIndex(int i, int width)
 		{
