@@ -13,28 +13,28 @@ namespace MotionDetection.Models
 			UnityNumber = unityNumber;
 			SensorType = sensorType;
 			Time = time;
-			CircularBuffer = new T[UnityNumber][][];
+			Buffer = new T[UnityNumber][][];
 			for (var i = 0; i < UnityNumber; i++)
 			{
-				CircularBuffer[i] = new T[SensorType][];
+				Buffer[i] = new T[SensorType][];
 				for (var j = 0; j < SensorType; j++)
 				{
-					CircularBuffer[i][j] = new T[Time];
+					Buffer[i][j] = new T[Time];
 				}
 			}
 		}
 
-		protected T[][][] CircularBuffer { get; set; }
+		protected T[][][] Buffer { get; set; }
 
 		public T this[int unityNumber, int sensorType, int time]
 		{
-			get { return CircularBuffer[unityNumber][sensorType][time]; }
-			set { CircularBuffer[unityNumber][sensorType][time] = value; }
+			get { return Buffer[unityNumber][sensorType][time]; }
+			set { Buffer[unityNumber][sensorType][time] = value; }
 		}
 
 		public T[] GetSubArray(int unityNumber, int sensorType)
 		{
-			return CircularBuffer[unityNumber][sensorType];
+			return Buffer[unityNumber][sensorType];
 		}
 
 		#region Getters

@@ -13,11 +13,11 @@
 		{
 			get
 			{
-                return CircularBuffer[unityNumber][sensorType][time%Time];
+                return Buffer[unityNumber][sensorType][time%Time];
 			}
 		    set
 		    {
-                CircularBuffer[unityNumber][sensorType][time%Time] = value;
+                Buffer[unityNumber][sensorType][time%Time] = value;
 		    }
 		}
 	}

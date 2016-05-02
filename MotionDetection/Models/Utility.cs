@@ -19,15 +19,6 @@ namespace MotionDetection.Models
 		Quaternion3
 	}
 
-	public enum SensorNumber
-	{
-		Sensor1,
-		Sensor2,
-		Sensor3,
-		Sensor4,
-		Sensor5,
-	}
-
 	public enum SeriesType
 	{
 		ModAcceleration,
@@ -38,8 +29,8 @@ namespace MotionDetection.Models
 
 	public class PlotEventArgs : EventArgs
 	{
+		public int UnityNumber;
 		public int SeriesType;
-		public int SensorNumber;
 		public double[] SensorData;
 		public int Time;
 	}

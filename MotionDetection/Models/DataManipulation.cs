@@ -15,7 +15,6 @@ namespace MotionDetection.Models
 
 	public class DataManipulation
 	{
-
 		public static double[] Modulo(double[] x, double[] y, double[] z)
 		{
 			var result = new double[x.Length];

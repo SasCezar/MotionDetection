@@ -30,10 +30,9 @@ namespace MotionDetection.Models
 				var taskIndex = 0;
 				foreach (var result in allResults)
 				{
-
 					var dataArgsAccelerometers = new PlotEventArgs
 					{
-						SensorNumber = i,
+						UnityNumber = i,
 						SeriesType = taskIndex,
 						SensorData = result,
 						Time = _time
@@ -50,7 +49,7 @@ namespace MotionDetection.Models
 			var modAccTask = new Task<double[]>(() => DataManipulation.Modulo(_buffer.GetSubArray(unityNumber, (int)SensorType.Accelerometer1),
 				_buffer.GetSubArray(unityNumber, (int)SensorType.Accelerometer2), _buffer.GetSubArray(unityNumber, (int)SensorType.Accelerometer3)));
 			var modGyrTask = new Task<double[]>(() => DataManipulation.Modulo(_buffer.GetSubArray(unityNumber, (int)SensorType.Gyroscope1),
-				_buffer.GetSubArray((int)SensorType.Gyroscope2, unityNumber), _buffer.GetSubArray(unityNumber, (int)SensorType.Gyroscope3)));
+				_buffer.GetSubArray(unityNumber, (int)SensorType.Gyroscope2), _buffer.GetSubArray(unityNumber, (int)SensorType.Gyroscope3)));
 	
 			tasks.Add(modAccTask);
 			tasks.Add(modGyrTask);

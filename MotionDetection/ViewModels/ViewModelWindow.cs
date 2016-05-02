@@ -68,11 +68,11 @@ namespace MotionDetection.ViewModels
 			for (var i = start; i < sensorArgs.SensorData.Length; i++)
 			{
 				var value = sensorArgs.SensorData[i];
-				SensorsLineSeries[sensorArgs.SensorNumber][sensorArgs.SeriesType].Points.Add(
+				SensorsLineSeries[sensorArgs.UnityNumber][sensorArgs.SeriesType].Points.Add(
 					new DataPoint(sensorArgs.Time + i, value));
 				++i;
 			}
-			SensorsModels[sensorArgs.SensorNumber].InvalidatePlot(true);
+			SensorsModels[sensorArgs.UnityNumber].InvalidatePlot(true);
 		}
 	}
 }
