@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Windows;
 
 namespace MotionDetection.Models
 {
@@ -29,7 +28,7 @@ namespace MotionDetection.Models
 						var sum = 0.0;
 						var start = Utils.FirstIndex(windowStartTime + k, WindowSize);
 						var stop = Utils.LastIndex(windowStartTime + k, WindowSize, windowStartTime + Parameters.StaticBufferSize);
-						
+
 						for (var h = start; h <= stop; ++h)
 						{
 							sum = sum + circularBuffer[i, j, h];
@@ -49,12 +48,12 @@ namespace MotionDetection.Models
 		public static double[] Median(double[] data, int windowSize)
 		{
 			var result = new double[data.Length];
-			for (int i = 0; i < result.Length; i++)
+			for (var i = 0; i < result.Length; i++)
 			{
 				var start = Utils.FirstIndex(i, windowSize);
 				var finish = Utils.LastIndex(i, windowSize, data.Length);
-				var orderedSegnemt = new ArraySegment<double>(data, start, finish-start).OrderBy(d => data);
-				result[i] = orderedSegnemt.ElementAt((finish-start)/2);
+				var orderedSegnemt = new ArraySegment<double>(data, start, finish - start).OrderBy(d => data);
+				result[i] = orderedSegnemt.ElementAt((finish - start)/2);
 			}
 			return result;
 		}

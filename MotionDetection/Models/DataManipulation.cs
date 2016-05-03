@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MotionDetection.Models
 {
-
 	public struct EulerAngles
 	{
 		public double Roll { get; set; }
@@ -31,14 +28,14 @@ namespace MotionDetection.Models
 		{
 			var result = new double[x.Length];
 			var rawSquare = x.Select(value => Math.Pow(value, 2)).ToArray();
-			var meanSquare = Enumerable.Select<double, double>(Mean(x, windowSize), value => Math.Pow(value, 2)).ToArray();
+			var meanSquare = Mean(x, windowSize).Select(value => Math.Pow(value, 2)).ToArray();
 			for (var i = 0; i < result.Length; ++i)
 			{
 				var start = Utils.FirstIndex(i, windowSize);
 				var stop = Utils.LastIndex(i, windowSize, result.Length);
 				var width = stop - start + 1;
 				var segmentSum = new ArraySegment<double>(rawSquare, start, width).Sum();
-				var value = segmentSum / width - meanSquare[i];
+				var value = segmentSum/width - meanSquare[i];
 				result[i] = Math.Sqrt(value);
 			}
 			return result;
@@ -57,7 +54,7 @@ namespace MotionDetection.Models
 				{
 					sum = sum + x[h];
 				}
-				result[i] = sum / (stop - start + 1);
+				result[i] = sum/(stop - start + 1);
 			}
 
 			return result;

@@ -62,17 +62,17 @@ namespace MotionDetection.ViewModels
 		public ConnectionCommand Command { get; set; }
 
 
-		public void OnDataProcessed(object sender, PlotEventArgs sensorArgs)
+		public void OnDataProcessed(object sender, SingleDataEventArgs singleArgs)
 		{
-			var start = sensorArgs.Time <= 50 ? 0 : sensorArgs.SensorData.Length/2;
-			for (var i = start; i < sensorArgs.SensorData.Length; i++)
+			var start = singleArgs.Time <= 50 ? 0 : singleArgs.SensorOne.Length/2;
+			for (var i = start; i < singleArgs.SensorOne.Length; i++)
 			{
-				var value = sensorArgs.SensorData[i];
-				SensorsLineSeries[sensorArgs.UnityNumber][sensorArgs.SeriesType].Points.Add(
-					new DataPoint(sensorArgs.Time + i, value));
+				var value = singleArgs.SensorOne[i];
+				SensorsLineSeries[singleArgs.UnityNumber][singleArgs.SeriesType].Points.Add(
+					new DataPoint(singleArgs.Time + i, value));
 				++i;
 			}
-			SensorsModels[sensorArgs.UnityNumber].InvalidatePlot(true);
+			SensorsModels[singleArgs.UnityNumber].InvalidatePlot(true);
 		}
 	}
 }

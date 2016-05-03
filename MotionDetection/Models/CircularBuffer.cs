@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MotionDetection.Models
+﻿namespace MotionDetection.Models
 {
 	public class CircularBuffer<T>
 	{
-		public int Size { get; set; }
-
-		private T[] _buffer;
+		private readonly T[] _buffer;
 
 		public CircularBuffer(int size)
 		{
 			Size = size;
 			_buffer = new T[Size];
 		}
+
+		public int Size { get; set; }
 
 		public T this[int position]
 		{

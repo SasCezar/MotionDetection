@@ -1,18 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MotionDetection.Models
 {
-	public delegate void DataProcessedEventHandeler(object sender, PlotEventArgs eventArgs);
+	public delegate void SingleDataProcessedEventHandeler(object sender, SingleDataEventArgs eventArgs);
+	public delegate void MultipleDataProcessedEventHandeler(object sender, MultipleDataEventArgs eventArgs);
 
 	public class DataProcessor
 	{
-
-		public event DataProcessedEventHandeler OnDataProcessedEventHandeler;
-
 		private Buffer3DMatrix<double> _buffer;
 		private int _time;
+
+		public event SingleDataProcessedEventHandeler OnSingleDataProcessedEventHandeler;
+		public event MultipleDataProcessedEventHandeler OnMultipleDataProcessedEventHandeler;
 
 		public async void ProcessData()
 		{
@@ -30,27 +30,41 @@ namespace MotionDetection.Models
 				var taskIndex = 0;
 				foreach (var result in allResults)
 				{
-					var dataArgsAccelerometers = new PlotEventArgs
+					var dataArgsAccelerometers = new SingleDataEventArgs
 					{
 						UnityNumber = i,
 						SeriesType = taskIndex,
-						SensorData = result,
+						SensorOne = result,
 						Time = _time
 					};
-					OnDataProcessedEventHandeler?.Invoke(this, dataArgsAccelerometers);
+					OnSingleDataProcessedEventHandeler?.Invoke(this, dataArgsAccelerometers);
 					taskIndex++;
 				}
+
+				OnMultipleDataProcessedEventHandeler?.Invoke(this, new MultipleDataEventArgs()
+				{
+					SensorOne = _buffer.GetSubArray(i, (int)SensorType.Magnetometer1),
+					SensorTwo = _buffer.GetSubArray(i, (int)SensorType.Magnetometer2),
+					SensorThree = _buffer.GetSubArray(i, (int)SensorType.Magnetometer3),
+					Time = _time,
+					SeriesType = (int)SeriesType.Turning,
+					UnityNumber = i
+				});
 			}
 		}
 
 		public IEnumerable<Task<double[]>> createTask(int unityNumber)
 		{
 			var tasks = new List<Task<double[]>>();
-			var modAccTask = new Task<double[]>(() => DataManipulation.Modulo(_buffer.GetSubArray(unityNumber, (int)SensorType.Accelerometer1),
-				_buffer.GetSubArray(unityNumber, (int)SensorType.Accelerometer2), _buffer.GetSubArray(unityNumber, (int)SensorType.Accelerometer3)));
-			var modGyrTask = new Task<double[]>(() => DataManipulation.Modulo(_buffer.GetSubArray(unityNumber, (int)SensorType.Gyroscope1),
-				_buffer.GetSubArray(unityNumber, (int)SensorType.Gyroscope2), _buffer.GetSubArray(unityNumber, (int)SensorType.Gyroscope3)));
-	
+			var modAccTask =
+				new Task<double[]>(() => DataManipulation.Modulo(_buffer.GetSubArray(unityNumber, (int) SensorType.Accelerometer1),
+					_buffer.GetSubArray(unityNumber, (int) SensorType.Accelerometer2),
+					_buffer.GetSubArray(unityNumber, (int) SensorType.Accelerometer3)));
+			var modGyrTask =
+				new Task<double[]>(() => DataManipulation.Modulo(_buffer.GetSubArray(unityNumber, (int) SensorType.Gyroscope1),
+					_buffer.GetSubArray(unityNumber, (int) SensorType.Gyroscope2),
+					_buffer.GetSubArray(unityNumber, (int) SensorType.Gyroscope3)));
+
 			tasks.Add(modAccTask);
 			tasks.Add(modGyrTask);
 

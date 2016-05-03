@@ -99,6 +99,7 @@
     <Compile Include="Models\CircularBuffer3DMatrix.cs" />
     <Compile Include="Models\DataManipulation.cs" />
     <Compile Include="Models\DataProcessor.cs" />
+    <Compile Include="Models\OrientationRecognition.cs" />
     <Compile Include="Models\Utility.cs" />
     <Compile Include="Models\DataReceiver.cs" />
     <Page Include="Views\MainWindow.xaml">

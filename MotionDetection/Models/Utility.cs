@@ -24,28 +24,34 @@ namespace MotionDetection.Models
 		ModAcceleration,
 		ModGyroscopes,
 		Turning,
-		DeadReckoning,
+		DeadReckoning
 	}
 
 	public class MotionEventArgs : EventArgs
 	{
-		public CircularBuffer<bool> MotionData;
+		public CircularBuffer<int> MotionData;
 		public int Time;
 	}
 
-	public class PlotEventArgs : EventArgs
+	public class SingleDataEventArgs : EventArgs
 	{
-		public int UnityNumber;
+		public double[] SensorOne;
 		public int SeriesType;
-		public double[] SensorData;
 		public int Time;
+		public int UnityNumber;
 	}
 
-    public class BufferEventArgs<T> : EventArgs
-    {
-        public Buffer3DMatrix<T> Data;
-        public int Time;
-    }
+	public class MultipleDataEventArgs : SingleDataEventArgs
+	{
+		public double[] SensorTwo;
+		public double[] SensorThree;
+	}
+
+	public class BufferEventArgs<T> : EventArgs
+	{
+		public Buffer3DMatrix<T> Data;
+		public int Time;
+	}
 
 	public static class Parameters
 	{

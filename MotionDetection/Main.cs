@@ -15,16 +15,20 @@ namespace MotionDetection
 			var dataReceiver = new DataReceiver();
 			var command = new ConnectionCommand(dataReceiver);
 			var signalProcessor = new SignalProcess();
-			dataReceiver.OnDataReceivedEventHandler += signalProcessor.OnDataReceived;
-			//dataReceiver.OnDataReceivedEventHandler += DataTesting.OnDataToPrint;
 			var dataProcessor = new DataProcessor();
-			signalProcessor.OnSignalProcessedEventHandler += dataProcessor.OnSignalSmoothed;
 			var motionRecognizer = new MotionRecognition();
-			dataProcessor.OnDataProcessedEventHandeler += motionRecognizer.OnDataRecived;
+			var orientationRecognizer = new OrientationRecognition();
 			var viewModel = new ViewModelWindow(command);
-			motionRecognizer.OnPlotMovement += viewModel.OnDataProcessed;
-			dataProcessor.OnDataProcessedEventHandeler += viewModel.OnDataProcessed;
 			var form = new MainWindow(viewModel);
+
+			dataReceiver.OnDataReceivedEventHandler += signalProcessor.OnDataReceived;
+			signalProcessor.OnSignalProcessedEventHandler += dataProcessor.OnSignalSmoothed;
+			dataProcessor.OnSingleDataProcessedEventHandeler += motionRecognizer.OnDataReceived;
+			dataProcessor.OnMultipleDataProcessedEventHandeler += orientationRecognizer.OnDataReceived;
+			motionRecognizer.OnPlotMovementEventHandeler += viewModel.OnDataProcessed;
+			orientationRecognizer.OnPlotOrientation += viewModel.OnDataProcessed;
+			dataProcessor.OnSingleDataProcessedEventHandeler += viewModel.OnDataProcessed;
+
 			form.Show();
 		}
 	}

@@ -74,7 +74,8 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-				_buffer = new CircularBuffer3DMatrix<double>(Parameters.NumUnity, Parameters.NumSensor, Parameters.CircularBufferSize);
+				_buffer = new CircularBuffer3DMatrix<double>(Parameters.NumUnity, Parameters.NumSensor,
+					Parameters.CircularBufferSize);
 
 				var t = new int[maxNumberOfSensors];
 				var instant = 0;
@@ -112,7 +113,8 @@ namespace MotionDetection.Models
 					}
 
 					// In caso non va settare > 25
-					if (instant >= Parameters.StaticBufferSize && instant%(Parameters.CircularBufferSize - Parameters.StaticBufferSize) == 0)
+					if (instant >= Parameters.StaticBufferSize &&
+					    instant%(Parameters.CircularBufferSize - Parameters.StaticBufferSize) == 0)
 					{
 						OnDataReceivedEventHandler?.Invoke(this, new BufferEventArgs<double>
 						{
@@ -120,7 +122,7 @@ namespace MotionDetection.Models
 							Time = instant - Parameters.StaticBufferSize
 						});
 					}
-					
+
 					// Lettura pacchetto seguente
 					packet = numOfUnity < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
 					instant++; // Incremento contatore tempo

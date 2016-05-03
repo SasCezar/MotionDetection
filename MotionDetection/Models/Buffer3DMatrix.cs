@@ -4,9 +4,9 @@ namespace MotionDetection.Models
 {
 	public class Buffer3DMatrix<T>
 	{
-		private int _unityNumber = -1;
 		private int _sensorType = -1;
 		private int _time = -1;
+		private int _unityNumber = -1;
 
 		public Buffer3DMatrix(int unityNumber, int sensorType, int time)
 		{
