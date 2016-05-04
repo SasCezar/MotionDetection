@@ -56,7 +56,6 @@ namespace MotionDetection.Models
 				}
 				result[i] = sum/(stop - start + 1);
 			}
-
 			return result;
 		}
 	}

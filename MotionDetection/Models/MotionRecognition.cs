@@ -14,7 +14,7 @@ namespace MotionDetection.Models
 
 		public MotionRecognition()
 		{
-			OnMovement += PrintMovements;
+			//OnMovement += PrintMovements;
 		}
 
 		public event MovementHadler OnMovement;
@@ -40,18 +40,6 @@ namespace MotionDetection.Models
 				RecognizeStatus(medData, data.Time);
 			}
 		}
-
-		private double[] DifferenceQuotient(double[] x)
-		{
-			var result = new double[x.Length];
-
-			for (var i = 0; i < result.Length - 1; ++i)
-			{
-				result[i] = x[i + 1] - x[i];
-			}
-			return result;
-		}
-
 
 		private EulerAngles[] EulerAnglesComputation(double[] q0, double[] q1, double[] q2, double[] q3)
 		{
