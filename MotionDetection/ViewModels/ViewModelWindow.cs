@@ -64,7 +64,7 @@ namespace MotionDetection.ViewModels
 
 		public void OnDataProcessed(object sender, SingleDataEventArgs singleArgs)
 		{
-			var start = singleArgs.Time <= 50 ? 0 : singleArgs.SensorOne.Length/2;
+			var start = singleArgs.Time < 25  ? 0 : singleArgs.SensorOne.Length/2;
 			for (var i = start; i < singleArgs.SensorOne.Length; i++)
 			{
 				var value = singleArgs.SensorOne[i];
