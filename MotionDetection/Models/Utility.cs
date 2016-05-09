@@ -24,7 +24,8 @@ namespace MotionDetection.Models
 		ModAcceleration,
 		ModGyroscopes,
 		Turning,
-		DeadReckoning
+		StandardDeviation,
+        Posture
 	}
 
 	public class MotionEventArgs : EventArgs

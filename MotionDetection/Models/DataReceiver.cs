@@ -75,7 +75,7 @@ namespace MotionDetection.Models
 				}
 
 				_buffer = new CircularBuffer3DMatrix<double>(Parameters.NumUnity, Parameters.NumSensor,
-					Parameters.CircularBufferSize);
+					Parameters.CircularBufferSize); 
 
 				var t = new int[maxNumberOfSensors];
 				var instant = 0;

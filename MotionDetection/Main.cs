@@ -18,11 +18,13 @@ namespace MotionDetection
 			var dataProcessor = new DataProcessor();
 			var motionRecognizer = new MotionRecognition();
 			var orientationRecognizer = new OrientationRecognition();
+            var postureRecognizer = new PostureRecognition();
 			var viewModel = new ViewModelWindow(command);
 			var form = new MainWindow(viewModel);
 
 			dataReceiver.OnDataReceivedEventHandler += signalProcessor.OnDataReceived;
 			signalProcessor.OnSignalProcessedEventHandler += dataProcessor.OnSignalSmoothed;
+		    signalProcessor.OnSignalProcessedEventHandler += postureRecognizer.OnDataReceived;
 			dataProcessor.OnSingleDataProcessedEventHandeler += motionRecognizer.OnDataReceived;
 			dataProcessor.OnMultipleDataProcessedEventHandeler += orientationRecognizer.OnDataReceived;
 			motionRecognizer.OnPlotMovementEventHandeler += viewModel.OnDataProcessed;

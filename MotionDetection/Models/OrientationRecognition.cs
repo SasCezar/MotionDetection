@@ -2,129 +2,189 @@ using System;
 
 namespace MotionDetection.Models
 {
-	public delegate void PlotOrientationHandeler(object sender, SingleDataEventArgs eventArgs);
+    public delegate void PlotOrientationHandeler(object sender, SingleDataEventArgs eventArgs);
 
-	public class OrientationRecognition
-	{
-		private int _time;
-		private double thresHold = 0.0001;
-	    private int[] _sign = new int[Parameters.NumUnity];
-	    private int _unityNumber;
+    public class OrientationRecognition
+    {
+        private int _time;
+        private double[] _cumulatedResult = new double[Parameters.NumUnity];
+        private double[] _intraWindowRadians = new double[Parameters.NumUnity];
+        private int _unityNumber;
 
-		public event PlotOrientationHandeler OnPlotOrientation;
+        public event PlotOrientationHandeler OnPlotOrientation;
 
-		public double[]  RecognizeOrientation(double[] y, double[] z)
-		{
-			var result = new double[y.Length];
-			result[0] = Math.Atan2(y[0], z[0]);
-		    if (_time == 0)
+        public double[] RecognizeOrientation(double[] y, double[] z)
+        {
+
+            /*  if (_time == 0)
 		    {
-                _sign[_unityNumber] = result[0] / Math.Abs(result[0]) > 0 ? 1 : -1;
+                _cumulatedResult[_unityNumber] = result[0] / Math.Abs(result[0]) > 0 ? 1 : -1;
+            }*/
+
+            // var sign = _cumulatedResult[_unityNumber];
+            //var quadrants = new int[result.Length];
+            //quadrants[0] = CalculateQuadrand(result[0]);
+            var result = new double[y.Length];
+            var radians = new double[result.Length];
+
+            var firstResult = Math.Atan2(y[0], z[0]);
+
+            if (_time == 0)
+            {
+                result[0] = firstResult;
+               
+            }else
+            {
+                result[0] = Compare(Math.Atan2(y[0], z[0]), _intraWindowRadians[_unityNumber], _cumulatedResult[_unityNumber]);
             }
 
-		    var sign = _sign[_unityNumber];
-			var quadrants = new int[result.Length];
-			quadrants[0] = CalculateQuadrand(result[0]);
-		    if (_unityNumber == 2 && _time%50 == 0)
-		    {
-		        Console.WriteLine($"quadrant \t {quadrants[0]} \t sign \t {sign} \t time \t {_time}");
-		    }
-			for (var i = 1; i < result.Length; i++)
-			{
-			    if (i == result.Length/2)
-			    {
-			        _sign[_unityNumber] = sign;
-			    }
-				var radians = Math.Atan2(y[i], z[i]);
-				quadrants[i] = CalculateQuadrand(radians);
-			    if (_unityNumber == 2 && _time%50 == 0)
-			    {
-			        Console.WriteLine($"quadrant[i] \t {quadrants[i]} \t quadrant[i-1] \t {quadrants[i-1]} \t sign \t {sign} \t time \t {_time + i}");
+            radians[0] = firstResult;
+
+            for (var i = 1; i < result.Length; i++)
+            {
+                radians[i] = Math.Atan2(y[i], z[i]);               
+
+                result[i] = Compare(radians[i], radians[i - 1], result[i - 1]);
+          
+                if (i == result.Length / 2)
+                {
+                    _cumulatedResult[_unityNumber] = result[i];
+                    _intraWindowRadians[_unityNumber] = radians[i];
+
                 }
+            }
 
-                if (quadrants[i] == 4 && quadrants[i - 1] == 1)
-				{
-					sign++;
-					if (sign == 0)
-					{
-						sign = 1;
-					}
-				}
-				else if(quadrants[i] == 1 && quadrants[i - 1] == 4)
-				{
-					sign--;
-					if (sign == 0)
-					{
-						sign = -1;
-					}
-				}
+            return result;
+        }
 
+        private int CalculateQuadrand(double theta)
+        {
+            if (theta >= 0 && theta <= Math.PI/2)
+            {
+                return 1;
+            }
+            if (theta >= Math.PI/2 && theta <= Math.PI)
+            {
+                return 2;
+            }
+            if (theta >= -Math.PI && theta <= -Math.PI/2)
+            {
+                return 3;
+            }
+            if (theta >= -Math.PI/2 && theta <= 0)
+            {
+                return 4;
+            }
+            return 0;
+        }
 
-				if ((sign > 0 && radians > 0) || (sign < 0 && radians < 0))
-				{
-				    result[i] = radians;
+        private double Compare(double actual, double prec, double resultPrec)
+        {
+            double result = 0;
+            //da usare per capire di quanto ci si sposta. per capire se dx/sx usare il verso dei quadranti.
+            double delta = 0;
+            var precQuadrant = CalculateQuadrand(prec);
+            var actualQuadrant = CalculateQuadrand(actual);
+
+            if (precQuadrant == actualQuadrant)
+            {
+                delta = actual - prec;
+                result = resultPrec + delta;
+
+            }
+            else
+            {
+
+                if (precQuadrant == 1)
+                {
+                    if (actualQuadrant == 2)
+                    {
+                        delta = actual - prec;
+                        result = resultPrec + delta;
+                    }
+                    else
+                    {
+                        delta = prec + Math.Abs(actual);
+                        result = resultPrec - delta;
+                    }
                 }
-				if (sign > 0 && radians < 0)
-				{
-					result[i] = (sign - 1) * Math.PI + Math.Abs(radians);
+                if (precQuadrant == 2)
+                {
+                    if (actualQuadrant == 3)
+                    {
+                        delta = Math.PI - prec + Math.PI + actual;
+                        result = resultPrec + delta;
+                    }
+                    //da qui rivedere
+                    else
+                    {
+                        delta = prec - actual;
+                        result = resultPrec - delta;
+                    }
                 }
-				if (sign < 0 && radians > 0)
-				{
-					result[i] = (sign - 1) * Math.PI + (- radians);
-				}
-				//result[i] = radians;
-			}
-			return result;
-		}
+                if (precQuadrant == 3)
+                {
+                    if (actualQuadrant == 4)
+                    {
+                        delta = prec - actual;
+                        result = resultPrec + Math.Abs(delta);
+                    }
+                    else
+                    {
+                        delta = Math.PI + prec + Math.PI - actual;
+                        result = resultPrec - Math.Abs(delta);
+                    }
+                }
+                if (precQuadrant == 4)
+                {
+                    if (actualQuadrant == 1)
+                    {
+                        delta = Math.Abs(prec) + actual;
+                        result = resultPrec + delta;
+                    }
+                    else
+                    {
+                        delta = actual - prec;
+                        result = resultPrec - Math.Abs(delta);
+                    }
+                }
+            }
 
-		private int CalculateQuadrand(double theta)
-		{
-			if (theta >= 0 && theta <= Math.PI/2)
-			{
-				return 1;
-			} 
-			if (theta >= Math.PI / 2 && theta <= Math.PI)
-			{
-				return 2;
-			}
-			if (theta >= -Math.PI && theta <= -Math.PI/2)
-			{
-				return 3;
-			}
-			if (theta >= -Math.PI/2 && theta <= 0)
-			{
-				return 4;
-			}
-			return 0;
-		}
+        /*    if (_unityNumber == 4)
+            {
+                Console.WriteLine(
+                    $"time \t {_time} \t prec \t {prec} \t actual \t {actual} \t delta \t {delta} \t precQuadrant \t {precQuadrant} \t actualQuadrant \t {actualQuadrant}");
+            }*/
+
+            return result;
+        }
 
 
-		private double[] DifferenceQuotient(double[] x)
-		{
-			var result = new double[x.Length];
+        private double[] DifferenceQuotient(double[] x)
+        {
+            var result = new double[x.Length];
 
-			for (var i = 0; i < result.Length - 1; ++i)
-			{
-				result[i] = x[i + 1] - x[i];
-			}
-			return result;
-		}
+            for (var i = 0; i < result.Length - 1; ++i)
+            {
+                result[i] = x[i + 1] - x[i];
+            }
+            return result;
+        }
 
-		public void OnDataReceived(object sender, MultipleDataEventArgs eventArgs)
-		{
-			_time = eventArgs.Time;
-		    _unityNumber = eventArgs.UnityNumber;
+        public void OnDataReceived(object sender, MultipleDataEventArgs eventArgs)
+        {
+            _time = eventArgs.Time;
+            _unityNumber = eventArgs.UnityNumber;
 
-			var	result = RecognizeOrientation(eventArgs.SensorTwo, eventArgs.SensorThree);
+            var result = RecognizeOrientation(eventArgs.SensorTwo, eventArgs.SensorThree);
 
-			OnPlotOrientation?.Invoke(this, new SingleDataEventArgs()
-			{
-				UnityNumber = eventArgs.UnityNumber,
-				SensorOne = result,
-				SeriesType = eventArgs.SeriesType,
-				Time = _time,
-			});
-		}
-
-	}
+            OnPlotOrientation?.Invoke(this, new SingleDataEventArgs
+            {
+                UnityNumber = eventArgs.UnityNumber,
+                SensorOne = result,
+                SeriesType = eventArgs.SeriesType,
+                Time = _time
+            });
+        }
+    }
 }
