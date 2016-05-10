@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace MotionDetection.Models
 {
+
+    public delegate void PostureHandeler(object sender, SingleDataEventArgs eventArgs);
+
     class PostureRecognition
     {
+        public event PostureHandeler OnPostureRecognizedHandeler;
  
         public double[] RecognizePosture(double[] accelerometer)
         {
@@ -34,14 +38,20 @@ namespace MotionDetection.Models
                     result[i] = 3;
                 }
             }
-            result = SignalProcess.Median(result, 25);
+            result = SignalProcess.Median(result, 31);
             return result;
         }
 
         public void OnDataReceived(object sender, BufferEventArgs<double> bufferEventArgs)
         {
-            RecognizePosture(bufferEventArgs.Data.GetSubArray(0, (int)SensorType.Accelerometer1));
-
+            var result = RecognizePosture(bufferEventArgs.Data.GetSubArray(0, (int)SensorType.Accelerometer1));
+            OnPostureRecognizedHandeler?.Invoke(this, new SingleDataEventArgs()
+            {
+                SensorOne = result,
+                SeriesType = (int)SeriesType.Posture,
+                Time = bufferEventArgs.Time,
+                UnityNumber = 0
+            });
         }
     }
 }

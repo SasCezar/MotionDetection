@@ -26,7 +26,7 @@ namespace MotionDetection.Models
 			socketClientThread.Start(Socket);
 		}
 
-		public async void Read(object obj)
+		public void Read(object obj)
 		{
 			var socket = (Socket) obj;
 			using (Stream stream = new NetworkStream(socket))

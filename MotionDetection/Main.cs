@@ -27,8 +27,9 @@ namespace MotionDetection
 		    signalProcessor.OnSignalProcessedEventHandler += postureRecognizer.OnDataReceived;
 			dataProcessor.OnSingleDataProcessedEventHandeler += motionRecognizer.OnDataReceived;
 			dataProcessor.OnMultipleDataProcessedEventHandeler += orientationRecognizer.OnDataReceived;
-			motionRecognizer.OnPlotMovementEventHandeler += viewModel.OnDataProcessed;
+			motionRecognizer.OnPlotMovementEventHandler += viewModel.OnDataProcessed;
 			orientationRecognizer.OnPlotOrientation += viewModel.OnDataProcessed;
+		    postureRecognizer.OnPostureRecognizedHandeler += viewModel.OnDataProcessed;
 			dataProcessor.OnSingleDataProcessedEventHandeler += viewModel.OnDataProcessed;
 
 			form.Show();

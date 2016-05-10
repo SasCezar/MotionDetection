@@ -4,7 +4,7 @@ namespace MotionDetection.Models
 {
 	public delegate void MovementHadler(object sender, MotionEventArgs eventArgs);
 
-	public delegate void PlotMovementEventHandeler(object sender, SingleDataEventArgs eventArgs);
+	public delegate void PlotMovementEventHandler(object sender, SingleDataEventArgs eventArgs);
 
 	public class MotionRecognition
 	{
@@ -14,12 +14,12 @@ namespace MotionDetection.Models
 
 		public MotionRecognition()
 		{
-			//OnMovement += PrintMovements;
+			//OnMovementHadler += PrintMovements;
 		}
 
-		public event MovementHadler OnMovement;
+		public event MovementHadler OnMovementHadler;
 
-		public event PlotMovementEventHandeler OnPlotMovementEventHandeler;
+		public event PlotMovementEventHandler OnPlotMovementEventHandler;
 
 		public void OnDataReceived(object sender, SingleDataEventArgs data)
 		{
@@ -29,7 +29,7 @@ namespace MotionDetection.Models
 				var medData = SignalProcess.Median(stdout, 31);
 
 
-				OnPlotMovementEventHandeler?.Invoke(this, new SingleDataEventArgs
+				OnPlotMovementEventHandler?.Invoke(this, new SingleDataEventArgs
 				{
 					UnityNumber = data.UnityNumber,
 					SeriesType = 3,
@@ -65,7 +65,7 @@ namespace MotionDetection.Models
 				++i;
 			}
 
-			OnMovement?.Invoke(this, new MotionEventArgs()
+			OnMovementHadler?.Invoke(this, new MotionEventArgs()
 			{
 				MotionData = isMoving,
 				Time = startTime
