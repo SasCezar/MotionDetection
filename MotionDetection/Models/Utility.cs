@@ -54,6 +54,14 @@ namespace MotionDetection.Models
 		public int Time;
 	}
 
+    public class DeadArgs : EventArgs
+    {
+        public Buffer3DMatrix<double> Data;
+        public double[] std;
+        public double[] posture;
+        public int Time;
+    }
+
 	public static class Parameters
 	{
 		public static int CircularBufferSize = 75;

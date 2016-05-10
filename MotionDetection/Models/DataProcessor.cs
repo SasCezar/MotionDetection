@@ -1,20 +1,24 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MotionDetection.Models
 {
 	public delegate void SingleDataProcessedEventHandeler(object sender, SingleDataEventArgs eventArgs);
 	public delegate void MultipleDataProcessedEventHandeler(object sender, MultipleDataEventArgs eventArgs);
+    public delegate void DeadDataEventHandeler(object sender, DeadArgs eventArgs);
 
 	public class DataProcessor
 	{
 		private Buffer3DMatrix<double> _buffer;
 		private int _time;
+	    private double[] _stdDevData;
 
-		public event SingleDataProcessedEventHandeler OnSingleDataProcessedEventHandeler;
+        public event SingleDataProcessedEventHandeler OnSingleDataProcessedEventHandeler;
 		public event MultipleDataProcessedEventHandeler OnMultipleDataProcessedEventHandeler;
+	    public event DeadDataEventHandeler OnDeadEventHandler;
 
-		public async void ProcessData()
+        public async void ProcessData()
 		{
 			for (var i = 0; i < Parameters.NumUnity; i++)
 			{
@@ -28,6 +32,9 @@ namespace MotionDetection.Models
 				var allResults = await Task.WhenAll(tasks);
 
 				var taskIndex = 0;
+
+			    _stdDevData = DataManipulation.StandardDeviation(allResults.ElementAt(0), 21);
+
 				foreach (var result in allResults)
 				{
 					var dataArgsAccelerometers = new SingleDataEventArgs
@@ -50,6 +57,7 @@ namespace MotionDetection.Models
 					SeriesType = (int)SeriesType.Turning,
 					UnityNumber = i
 				});
+
 			}
 		}
 
@@ -77,5 +85,16 @@ namespace MotionDetection.Models
 			_time = eventargs.Time;
 			ProcessData();
 		}
-	}
+
+	    public void OnRecognized(object sender, SingleDataEventArgs eventArgs)
+	    {
+            OnDeadEventHandler?.Invoke(this, new DeadArgs
+            {
+                Data = _buffer,
+                posture = eventArgs.SensorOne,
+                std = _stdDevData,
+                Time = eventArgs.Time
+            });
+        }
+    }
 }

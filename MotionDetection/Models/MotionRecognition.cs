@@ -4,7 +4,7 @@ namespace MotionDetection.Models
 {
 	public delegate void MovementHadler(object sender, MotionEventArgs eventArgs);
 
-	public delegate void PlotMovementEventHandler(object sender, SingleDataEventArgs eventArgs);
+	public delegate void PlotMovementEventHandeler(object sender, SingleDataEventArgs eventArgs);
 
 	public class MotionRecognition
 	{
@@ -12,14 +12,9 @@ namespace MotionDetection.Models
 		private CircularBuffer<int> isMoving = new CircularBuffer<int>(Parameters.CircularBufferSize);
 		//private DataManipulation DataManpulator { get; set; }
 
-		public MotionRecognition()
-		{
-			//OnMovementHadler += PrintMovements;
-		}
+		public event MovementHadler OnMovement;
 
-		public event MovementHadler OnMovementHadler;
-
-		public event PlotMovementEventHandler OnPlotMovementEventHandler;
+        public event PlotMovementEventHandeler OnPlotMovementEventHandler;
 
 		public void OnDataReceived(object sender, SingleDataEventArgs data)
 		{
@@ -27,7 +22,6 @@ namespace MotionDetection.Models
 			{
 				var stdout = DataManipulation.StandardDeviation(data.SensorOne, 11);
 				var medData = SignalProcess.Median(stdout, 31);
-
 
 				OnPlotMovementEventHandler?.Invoke(this, new SingleDataEventArgs
 				{
@@ -65,7 +59,7 @@ namespace MotionDetection.Models
 				++i;
 			}
 
-			OnMovementHadler?.Invoke(this, new MotionEventArgs()
+			OnMovement?.Invoke(this, new MotionEventArgs()
 			{
 				MotionData = isMoving,
 				Time = startTime

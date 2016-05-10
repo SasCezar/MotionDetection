@@ -10,7 +10,7 @@ namespace MotionDetection.Models
         private double[] _cumulatedResult = new double[Parameters.NumUnity];
         private double[] _intraWindowRadians = new double[Parameters.NumUnity];
         private int _unityNumber;
-
+ 
         public event PlotOrientationHandeler OnPlotOrientation;
 
         public double[] RecognizeOrientation(double[] y, double[] z)

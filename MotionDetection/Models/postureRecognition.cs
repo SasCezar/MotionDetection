@@ -45,7 +45,7 @@ namespace MotionDetection.Models
         public void OnDataReceived(object sender, BufferEventArgs<double> bufferEventArgs)
         {
             var result = RecognizePosture(bufferEventArgs.Data.GetSubArray(0, (int)SensorType.Accelerometer1));
-            OnPostureRecognizedHandeler?.Invoke(this, new SingleDataEventArgs()
+            OnPostureRecognizedHandeler?.Invoke(this, new SingleDataEventArgs
             {
                 SensorOne = result,
                 SeriesType = (int)SeriesType.Posture,

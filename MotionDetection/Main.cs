@@ -19,6 +19,7 @@ namespace MotionDetection
 			var motionRecognizer = new MotionRecognition();
 			var orientationRecognizer = new OrientationRecognition();
             var postureRecognizer = new PostureRecognition();
+            var deadReckoningRecognizer = new DeadReckoningRecognition();
 			var viewModel = new ViewModelWindow(command);
 			var form = new MainWindow(viewModel);
 
@@ -29,6 +30,8 @@ namespace MotionDetection
 			dataProcessor.OnMultipleDataProcessedEventHandeler += orientationRecognizer.OnDataReceived;
 			motionRecognizer.OnPlotMovementEventHandler += viewModel.OnDataProcessed;
 			orientationRecognizer.OnPlotOrientation += viewModel.OnDataProcessed;
+		    postureRecognizer.OnPostureRecognizedHandeler += dataProcessor.OnRecognized;
+		    dataProcessor.OnDeadEventHandler += deadReckoningRecognizer.OnDataReceived;
 		    postureRecognizer.OnPostureRecognizedHandeler += viewModel.OnDataProcessed;
 			dataProcessor.OnSingleDataProcessedEventHandeler += viewModel.OnDataProcessed;
 
