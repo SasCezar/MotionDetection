@@ -15,15 +15,6 @@ namespace MotionDetection.Models
 
         public double[] RecognizeOrientation(double[] y, double[] z)
         {
-
-            /*  if (_time == 0)
-		    {
-                _cumulatedResult[_unityNumber] = result[0] / Math.Abs(result[0]) > 0 ? 1 : -1;
-            }*/
-
-            // var sign = _cumulatedResult[_unityNumber];
-            //var quadrants = new int[result.Length];
-            //quadrants[0] = CalculateQuadrand(result[0]);
             var result = new double[y.Length];
             var radians = new double[result.Length];
 

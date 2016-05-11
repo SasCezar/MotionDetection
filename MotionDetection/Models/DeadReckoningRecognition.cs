@@ -18,10 +18,10 @@ namespace MotionDetection.Models
 
         public void OnDataReceived(object sender, DeadArgs eventArgs)
         {
-            for (int i = 0; i < 50; i++)
-            {
-                Console.WriteLine("DRSAYSHI" + eventArgs.std[i]); 
-            }
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    Console.WriteLine("DRSAYSHI" + eventArgs.std[i]); 
+            //}
         }
     }
 }

@@ -46,7 +46,17 @@
                 Height="110"
                 Margin="15.917,23,23.4,0"
                 VerticalAlignment="Top"
-                Command="{Binding Command}"
-                Content="Button" />
+                Command="{Binding ListenCommand}"
+                Content="Listen" />
+        <Button x:Name="ResetButton"
+                Grid.Row="1"
+                Grid.Column="1"
+                Width="200"
+                Height="110"
+                Margin="15,140,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Command="{Binding ResetCommand}"
+                Content="Clear" />
     </Grid>
 </Window>

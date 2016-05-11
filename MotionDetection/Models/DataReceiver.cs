@@ -13,11 +13,14 @@ namespace MotionDetection.Models
 		private CircularBuffer3DMatrix<double> _buffer;
 
 		public Socket Socket { get; private set; }
+		public bool Connected { get; set; }
+
 		public event DataReceivedEventHandler OnDataReceivedEventHandler;
 
 		// TODO Set socket as a public parameter
 		public void Start()
 		{
+			Connected = true;
 			var ep = new IPEndPoint(IPAddress.Any, 45555);
 			var listener = new TcpListener(ep);
 			listener.Start();
@@ -127,6 +130,7 @@ namespace MotionDetection.Models
 					packet = numOfUnity < 5 ? reader.ReadBytes(byteToRead + 4) : reader.ReadBytes(byteToRead + 6);
 					instant++; // Incremento contatore tempo
 				} while (packet.Length != 0);
+				Connected = false;
 			}
 		}
 	}

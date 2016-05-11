@@ -17,9 +17,10 @@ namespace MotionDetection.Commands
 
 		public bool CanExecute(object parameter)
 		{
-			//throw new NotImplementedException();
+			if(Receiver.Socket != null) { 
+				return !Receiver.Connected;
+			}
 			return true;
-			//return !Receiver.Socket.Poll(20000,SelectMode.SelectRead);
 		}
 
 		public async void Execute(object parameter)

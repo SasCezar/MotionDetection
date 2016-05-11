@@ -93,6 +93,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\ConnectionCommand.cs" />
+    <Compile Include="Commands\ResetCommand.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Models\Buffer3DMatrix.cs" />
     <Compile Include="Models\CircularBuffer.cs" />
