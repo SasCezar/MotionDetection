@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace MotionDetection.Models
 {
@@ -19,7 +20,14 @@ namespace MotionDetection.Models
             {
                 var slice = new ArraySegment<double>(stdDev, i * stdDev.Length/numOfSlices, stdDev.Length/numOfSlices);
                 var distance = slice.Where(x => x > _threshold).Sum();
-                var angle;
+                var angle = eulerAngles[i*stdDev.Length/numOfSlices].Roll;
+
+                var sin = Math.Sin(angle);
+                var cos = Math.Cos(angle);
+
+                var newX = x + (cos*distance);
+                var newY = y + (sin*distance);
+
 
             }
 
