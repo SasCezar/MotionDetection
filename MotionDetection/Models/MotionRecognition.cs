@@ -35,20 +35,7 @@ namespace MotionDetection.Models
 			}
 		}
 
-		private EulerAngles[] EulerAnglesComputation(double[] q0, double[] q1, double[] q2, double[] q3)
-		{
-			var result = new EulerAngles[q0.Length];
-			for (var i = 0; i < result.Length; ++i)
-			{
-				var roll = Math.Atan2(2*q2[i]*q3[i] + 2*q0[i]*q1[i], 2*Math.Pow(q0[i], 2) + 2*Math.Pow(q3[i], 2) - 1);
-				var pitch = -Math.Asin(2*q1[i]*q3[i] - 2*q0[i]*q2[i]);
-				var yaw = Math.Atan2(2*q1[i]*q2[i] + 2*q0[i]*q3[i], 2*Math.Pow(q0[i], 2) + 2*Math.Pow(q1[i], 2) - 1);
-
-				result[i] = new EulerAngles {Roll = roll, Pitch = pitch, Yaw = yaw};
-			}
-
-			return result;
-		}
+		
 
 		public void RecognizeStatus(double[] std, int startTime)
 		{
