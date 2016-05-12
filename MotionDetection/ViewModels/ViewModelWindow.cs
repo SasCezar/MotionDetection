@@ -11,6 +11,7 @@ namespace MotionDetection.ViewModels
 	public class ViewModelWindow
 	{
 		public LineSeries[][] SensorsLineSeries;
+		public LineSeries[] DeadReckoningLineSeries;
 
 		public ViewModelWindow()
 		{
@@ -24,6 +25,9 @@ namespace MotionDetection.ViewModels
 			var numOfSeries = Enum.GetNames(typeof(SeriesType)).Length;
 			SensorsModels = new PlotModel[5];
 			SensorsLineSeries = new LineSeries[5][];
+			DeadReckoningModels = new PlotModel[5];
+			DeadReckoningLineSeries = new LineSeries[5];
+
 
 			for (var i = 0; i < Parameters.NumUnity; i++)
 			{
@@ -51,6 +55,28 @@ namespace MotionDetection.ViewModels
 					};
 					SensorsModels[i].Series.Add(SensorsLineSeries[i][j]);
 				}
+
+				DeadReckoningModels[i] = new PlotModel
+				{
+					Title =  $"Dead Reckoning {i+1}",
+					PlotType = PlotType.Cartesian
+				};
+				DeadReckoningModels[i].Axes.Add(new LinearAxis()
+				{
+					Position = AxisPosition.Left,
+					Title = "X (m)"
+				});
+				DeadReckoningModels[i].Axes.Add(new LinearAxis()
+				{
+					Position = AxisPosition.Bottom,
+					Title = "Y (m)"
+				});
+
+				DeadReckoningLineSeries[i] = new LineSeries()
+				{
+					Title = "Motion"
+				};
+				DeadReckoningModels[i].Series.Add(DeadReckoningLineSeries[i]);
 			}
 		}
 
@@ -65,6 +91,8 @@ namespace MotionDetection.ViewModels
 
 		public ResetCommand ResetCommand { get; set; }
 
+		public PlotModel[] DeadReckoningModels { get; set; }
+		
 
 		public void OnDataProcessed(object sender, SingleDataEventArgs singleArgs)
 		{
@@ -74,9 +102,19 @@ namespace MotionDetection.ViewModels
 				var value = singleArgs.SensorOne[i];
 				SensorsLineSeries[singleArgs.UnityNumber][singleArgs.SeriesType].Points.Add(
 					new DataPoint(singleArgs.Time + i, value));
-				++i;
 			}
 			SensorsModels[singleArgs.UnityNumber].InvalidatePlot(true);
+		}
+
+		public void OnDeadReckoningReceived(object sender, MultipleDataEventArgs multipleEvent)
+		{
+			var x = multipleEvent.SensorOne;
+			var y = multipleEvent.SensorTwo;
+
+			for (int i = 0; i < x.Length; i++)
+			{
+				DeadReckoningLineSeries[0].Points.Add(new DataPoint(x[i], y[i]));
+			}
 		}
 
 		public void ClearPlot()

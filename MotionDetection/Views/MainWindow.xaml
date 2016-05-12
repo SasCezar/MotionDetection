@@ -23,7 +23,21 @@
 
         <TabControl Grid.RowSpan="2" Margin="0,0,8.0,0">
             <TabItem Header="Sensor 1">
-                <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorsModels[0]}" />
+                <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="400" />
+                            <RowDefinition Height="400" />
+                        </Grid.RowDefinitions>
+
+                        <oxy:PlotView Grid.Row="0"
+                                      Margin="0,0,0,0"
+                                      Model="{Binding SensorsModels[0]}" />
+                        <oxy:PlotView Grid.Row="1"
+                                      Margin="0,0,0,0"
+                                      Model="{Binding DeadReckoningModels[0]}" />
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Sensor 2">
                 <oxy:PlotView Margin="0,0,0,0" Model="{Binding SensorsModels[1]}" />
