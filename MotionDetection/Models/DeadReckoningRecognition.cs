@@ -1,37 +1,56 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace MotionDetection.Models
 {
-    internal class DeadReckoningRecognition
+    public delegate void DeadReckoningHandeler(object sender, MultipleDataEventArgs eventArgs);
+
+    public class DeadReckoningRecognition
     {
         private int _time;
         private double _threshold = 0.3;
+        public event DeadReckoningHandeler OnDeadReckoningRecognizedHandler;
+        private double x;
+        private double y;
+
 
 
         public double[] RecognizeDeadReckoning(double[] stdDev, double[] posture, EulerAngles[] eulerAngles)
         {
             var result = new double[stdDev.Length];
-            var numOfSlices = 2;
+            var numOfSlices = 25;
 
+            var xPoints = new double[numOfSlices];
+            var yPoints = new double[numOfSlices];
 
             for (int i = 0; i < numOfSlices; ++i)
             {
                 var slice = new ArraySegment<double>(stdDev, i * stdDev.Length/numOfSlices, stdDev.Length/numOfSlices);
-                var distance = slice.Where(x => x > _threshold).Sum();
-                var angle = eulerAngles[i*stdDev.Length/numOfSlices].Roll;
-
+                var distance = slice.Where(p => p > _threshold).Sum();
+                var angle = eulerAngles[i*stdDev.Length/numOfSlices].Yaw;
+                
                 var sin = Math.Sin(angle);
                 var cos = Math.Cos(angle);
 
-                var newX = x + (cos*distance);
-                var newY = y + (sin*distance);
 
+
+                x = x + cos*distance;               
+                y = y + sin*distance;
+
+                Console.WriteLine($"distance \t {distance} \t x \t {x} \t y \t {y}");
+
+                xPoints[i] = x;
+                yPoints[i] = y;
 
             }
 
-            
+            OnDeadReckoningRecognizedHandler?.Invoke(this, new MultipleDataEventArgs
+            {
+                SensorOne = xPoints,
+                SensorTwo = yPoints
+            });             
       
 
             return result;

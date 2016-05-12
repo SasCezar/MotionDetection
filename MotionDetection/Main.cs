@@ -37,6 +37,7 @@ namespace MotionDetection
 		    dataProcessor.OnDeadEventHandler += deadReckoningRecognizer.OnDataReceived;
 		    postureRecognizer.OnPostureRecognizedHandeler += viewModel.OnDataProcessed;
 			dataProcessor.OnSingleDataProcessedEventHandeler += viewModel.OnDataProcessed;
+		    deadReckoningRecognizer.OnDeadReckoningRecognizedHandler += viewModel.OnDeadReckoningReceived;
 
 			form.Show();
 		}

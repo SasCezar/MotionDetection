@@ -11,7 +11,7 @@ namespace MotionDetection.ViewModels
 	public class ViewModelWindow
 	{
 		public LineSeries[][] SensorsLineSeries;
-		public LineSeries[] DeadReckoningLineSeries;
+		public LineSeries DeadReckoningLineSeries;
 
 		public ViewModelWindow()
 		{
@@ -25,8 +25,8 @@ namespace MotionDetection.ViewModels
 			var numOfSeries = Enum.GetNames(typeof(SeriesType)).Length;
 			SensorsModels = new PlotModel[5];
 			SensorsLineSeries = new LineSeries[5][];
-			DeadReckoningModels = new PlotModel[5];
-			DeadReckoningLineSeries = new LineSeries[5];
+			DeadReckoningModels = new PlotModel();
+			DeadReckoningLineSeries = new LineSeries();
 
 
 			for (var i = 0; i < Parameters.NumUnity; i++)
@@ -56,29 +56,29 @@ namespace MotionDetection.ViewModels
 					SensorsModels[i].Series.Add(SensorsLineSeries[i][j]);
 				}
 
-				DeadReckoningModels[i] = new PlotModel
-				{
-					Title =  $"Dead Reckoning {i+1}",
-					PlotType = PlotType.Cartesian
-				};
-				DeadReckoningModels[i].Axes.Add(new LinearAxis()
-				{
-					Position = AxisPosition.Left,
-					Title = "X (m)"
-				});
-				DeadReckoningModels[i].Axes.Add(new LinearAxis()
-				{
-					Position = AxisPosition.Bottom,
-					Title = "Y (m)"
-				});
-
-				DeadReckoningLineSeries[i] = new LineSeries()
-				{
-					Title = "Motion"
-				};
-				DeadReckoningModels[i].Series.Add(DeadReckoningLineSeries[i]);
 			}
-		}
+
+            DeadReckoningModels = new PlotModel
+            {
+                Title = "Dead Reckoning"
+                //PlotType = PlotType.Cartesian
+            };
+            DeadReckoningModels.Axes.Add(new LinearAxis()
+            {
+                Position = AxisPosition.Left,
+                Title = "X (m)"
+            });
+            DeadReckoningModels.Axes.Add(new LinearAxis()
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Y (m)"
+            });
+            DeadReckoningLineSeries = new LineSeries()
+            {
+                Title = "Motion"
+            };
+            DeadReckoningModels.Series.Add(DeadReckoningLineSeries);
+        }
 
 		//private void OnMovementReceived(object sender, MotionEventArgs eventargs)
 		//{
@@ -91,7 +91,7 @@ namespace MotionDetection.ViewModels
 
 		public ResetCommand ResetCommand { get; set; }
 
-		public PlotModel[] DeadReckoningModels { get; set; }
+		public PlotModel DeadReckoningModels { get; set; }
 		
 
 		public void OnDataProcessed(object sender, SingleDataEventArgs singleArgs)
@@ -113,8 +113,9 @@ namespace MotionDetection.ViewModels
 
 			for (int i = 0; i < x.Length; i++)
 			{
-				DeadReckoningLineSeries[0].Points.Add(new DataPoint(x[i], y[i]));
+				DeadReckoningLineSeries.Points.Add(new DataPoint(x[i], y[i]));
 			}
+            DeadReckoningModels.InvalidatePlot(true);
 		}
 
 		public void ClearPlot()
@@ -123,6 +124,7 @@ namespace MotionDetection.ViewModels
 			for (var i = 0; i < Parameters.NumUnity; i++)
 			{
 				SensorsModels[i].Series.Clear();
+                DeadReckoningModels.Series.Clear();
 				for (var j = 0; j < numOfSeries; j++)
 				{
 					var title = ((SeriesType) j).ToString();
@@ -132,9 +134,17 @@ namespace MotionDetection.ViewModels
 					};
 
 					SensorsModels[i].Series.Add(SensorsLineSeries[i][j]);
-				}
+
+                }
 				SensorsModels[i].InvalidatePlot(true);
-			}
-		}
+           
+            }
+            DeadReckoningLineSeries = new LineSeries
+            {
+                Title = "Motion"
+            };
+            DeadReckoningModels.Series.Add(DeadReckoningLineSeries);
+            DeadReckoningModels.InvalidatePlot(true);
+        }
 	}
 }
