@@ -23,6 +23,7 @@ namespace MotionDetection
             var deadReckoningRecognizer = new DeadReckoningRecognition();
 			var viewModel = new ViewModelWindow(command, resetCommand);
 			var form = new MainWindow(viewModel);
+            var printer = new Printer("C:\\Users\\Ilaria\\Desktop\\motionLog.csv");
 
 			resetCommand.ViewModel = viewModel;
 
@@ -38,6 +39,7 @@ namespace MotionDetection
 		    postureRecognizer.OnPostureRecognizedHandeler += viewModel.OnDataProcessed;
 			dataProcessor.OnSingleDataProcessedEventHandeler += viewModel.OnDataProcessed;
 		    deadReckoningRecognizer.OnDeadReckoningRecognizedHandler += viewModel.OnDeadReckoningReceived;
+		    deadReckoningRecognizer.OnDeadReckoningRecognizedHandler += printer.OnDataAnalyzed;
 
 			form.Show();
 		}

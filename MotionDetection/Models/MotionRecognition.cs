@@ -10,8 +10,9 @@ namespace MotionDetection.Models
 	public class MotionRecognition
 	{
 		private const double Threshhold = 0.4;
-		private CircularBuffer<int> isMoving;
+		//private CircularBuffer<int> isMoving;
         int WindowSize = ViewModelWindow.StaticBufferSize / 50 * 11;
+        private int[] isMoving = new int[ViewModelWindow.StaticBufferSize];
         //private DataManipulation DataManpulator { get; set; }
 
         public event MovementHadler OnMovement;
@@ -41,22 +42,23 @@ namespace MotionDetection.Models
 
 		public void RecognizeStatus(double[] std, int startTime)
 		{
-			if (isMoving == null)
-			{
-				isMoving = new CircularBuffer<int>(ViewModelWindow.CircularBufferSize);
-			}
-			var i = startTime;
+			//if (isMoving == null)
+			//{
+			//	isMoving = new CircularBuffer<int>(ViewModelWindow.CircularBufferSize);
+			//}
+			var i = 0;
 			foreach (var data in std)
 			{
 				isMoving[i] = (data > Threshhold) || (isMoving[i] == 1) ? 1 : 0;
 				++i;
 			}
 
-			OnMovement?.Invoke(this, new MotionEventArgs()
-			{
-				MotionData = isMoving,
-				Time = startTime
-			});
+		    Printer.IsMoving = isMoving;
+		    //OnMovement?.Invoke(this, new MotionEventArgs()
+		    //{
+		    //	MotionData = isMoving,
+		    //	Time = startTime
+		    //});
 		}
 
 		protected void PrintMovements(object sender, MotionEventArgs args)

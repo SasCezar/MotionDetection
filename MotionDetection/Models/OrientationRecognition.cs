@@ -12,7 +12,7 @@ namespace MotionDetection.Models
         private double[] _cumulatedResult = new double[ViewModelWindow.NumUnity];
         private double[] _intraWindowRadians = new double[ViewModelWindow.NumUnity];
         private int _unityNumber;
-        private double TurningThreshold;
+        private double TurningThreshold = 0.1;
         List<int> IsTurning;
 
         public event PlotOrientationHandeler OnPlotOrientation;
@@ -35,6 +35,7 @@ namespace MotionDetection.Models
             }
 
             radians[0] = firstResult;
+            IsTurning.Add(0);
 
             for (var i = 1; i < result.Length; i++)
             {

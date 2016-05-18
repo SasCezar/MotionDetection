@@ -30,7 +30,8 @@ namespace MotionDetection.Models
 
 	public class MotionEventArgs : EventArgs
 	{
-		public CircularBuffer<int> MotionData;
+		public int[] MotionData;
+		//public CircularBuffer<int> MotionData;
 		public int Time;
 	}
 

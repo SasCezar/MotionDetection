@@ -43,6 +43,7 @@ namespace MotionDetection.Models
             }
            
             result = SignalProcess.Median(result, WindowSize);
+            Printer.Posture = result;
             return result;
         }
 
