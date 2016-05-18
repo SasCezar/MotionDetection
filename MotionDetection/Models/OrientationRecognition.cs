@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MotionDetection.ViewModels;
 
 namespace MotionDetection.Models
@@ -11,11 +12,14 @@ namespace MotionDetection.Models
         private double[] _cumulatedResult = new double[ViewModelWindow.NumUnity];
         private double[] _intraWindowRadians = new double[ViewModelWindow.NumUnity];
         private int _unityNumber;
- 
+        private double TurningThreshold;
+        List<int> IsTurning;
+
         public event PlotOrientationHandeler OnPlotOrientation;
 
         public double[] RecognizeOrientation(double[] y, double[] z)
         {
+            IsTurning = new List<int>();
             var result = new double[y.Length];
             var radians = new double[result.Length];
 
@@ -45,7 +49,7 @@ namespace MotionDetection.Models
 
                 }
             }
-
+            Printer.IsTurning = IsTurning.ToArray();
             return result;
         }
 
@@ -73,6 +77,7 @@ namespace MotionDetection.Models
         private double Compare(double actual, double prec, double resultPrec)
         {
             double result = 0;
+            int direction = 0;
             //da usare per capire di quanto ci si sposta. per capire se dx/sx usare il verso dei quadranti.
             double delta = 0;
             var precQuadrant = CalculateQuadrand(prec);
@@ -82,7 +87,17 @@ namespace MotionDetection.Models
             {
                 delta = actual - prec;
                 result = resultPrec + delta;
-
+                if (Math.Abs(delta) > TurningThreshold)
+                {
+                    if (actual < prec)
+                    {
+                        direction = 1;
+                    }
+                    else
+                    {
+                        direction = -1;
+                    }
+                }
             }
             else
             {
@@ -93,11 +108,20 @@ namespace MotionDetection.Models
                     {
                         delta = actual - prec;
                         result = resultPrec + delta;
+                        if (Math.Abs(delta) > TurningThreshold)
+                        {
+                            direction = -1;
+                        }
+                        
                     }
                     else
                     {
                         delta = prec + Math.Abs(actual);
                         result = resultPrec - delta;
+                        if (Math.Abs(delta) > TurningThreshold)
+                        {
+                            direction = 1;
+                        }
                     }
                 }
                 if (precQuadrant == 2)
@@ -106,12 +130,20 @@ namespace MotionDetection.Models
                     {
                         delta = Math.PI - prec + Math.PI + actual;
                         result = resultPrec + delta;
+                        if (Math.Abs(delta) > TurningThreshold)
+                        {
+                            direction = -1;
+                        }
                     }
                     //da qui rivedere
                     else
                     {
                         delta = prec - actual;
                         result = resultPrec - delta;
+                        if (Math.Abs(delta) > TurningThreshold)
+                        {
+                            direction = 1;
+                        }
                     }
                 }
                 if (precQuadrant == 3)
@@ -120,11 +152,19 @@ namespace MotionDetection.Models
                     {
                         delta = prec - actual;
                         result = resultPrec + Math.Abs(delta);
+                        if (Math.Abs(delta) > TurningThreshold)
+                        {
+                            direction = -1;
+                        }
                     }
                     else
                     {
                         delta = Math.PI + prec + Math.PI - actual;
                         result = resultPrec - Math.Abs(delta);
+                        if (Math.Abs(delta) > TurningThreshold)
+                        {
+                            direction = 1;
+                        }
                     }
                 }
                 if (precQuadrant == 4)
@@ -133,11 +173,19 @@ namespace MotionDetection.Models
                     {
                         delta = Math.Abs(prec) + actual;
                         result = resultPrec + delta;
+                        if (Math.Abs(delta) > TurningThreshold)
+                        {
+                            direction = -1;
+                        }
                     }
                     else
                     {
                         delta = actual - prec;
                         result = resultPrec - Math.Abs(delta);
+                        if (Math.Abs(delta) > TurningThreshold)
+                        {
+                            direction = 1;
+                        }
                     }
                 }
             }
@@ -147,6 +195,8 @@ namespace MotionDetection.Models
                 Console.WriteLine(
                     $"time \t {_time} \t prec \t {prec} \t actual \t {actual} \t delta \t {delta} \t precQuadrant \t {precQuadrant} \t actualQuadrant \t {actualQuadrant}");
             }*/
+            
+            IsTurning.Add(direction);
 
             return result;
         }

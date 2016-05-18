@@ -62,10 +62,6 @@ namespace MotionDetection.Models
         public int Time;
     }
 
-	public static class Parameters
-	{
-	}
-
 	public static class Utils
 	{
 		public static int FirstIndex(int i, int width)

@@ -8,8 +8,8 @@ namespace MotionDetection.Models
 
 	public class SignalProcess
 	{
-		public const int WindowSize = 11;
-		public Buffer3DMatrix<double> Buffer;
+		public int WindowSize = ViewModelWindow.StaticBufferSize/50*11;
+		public static Buffer3DMatrix<double> Buffer;
 
 		public SignalProcess()
 		{

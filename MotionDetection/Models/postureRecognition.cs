@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MotionDetection.ViewModels;
 
 namespace MotionDetection.Models
 {
@@ -12,7 +13,9 @@ namespace MotionDetection.Models
     class PostureRecognition
     {
         public event PostureHandeler OnPostureRecognizedHandeler;
- 
+
+        int WindowSize = ViewModelWindow.StaticBufferSize / 50 * 11;
+
         public double[] RecognizePosture(double[] accelerometer)
         {
             var result = new double[accelerometer.Length];
@@ -38,7 +41,8 @@ namespace MotionDetection.Models
                     result[i] = 3;
                 }
             }
-            result = SignalProcess.Median(result, 31);
+           
+            result = SignalProcess.Median(result, WindowSize);
             return result;
         }
 

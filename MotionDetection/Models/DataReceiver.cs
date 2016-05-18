@@ -21,6 +21,7 @@ namespace MotionDetection.Models
 		// TODO Set socket as a public parameter
 		public void Start()
 		{
+            Console.WriteLine($"Static {ViewModelWindow.StaticBufferSize} \t Circular {ViewModelWindow.CircularBufferSize}");
 			Connected = true;
 			var ep = new IPEndPoint(IPAddress.Any, 45555);
 			var listener = new TcpListener(ep);
@@ -81,6 +82,9 @@ namespace MotionDetection.Models
 				_buffer = new CircularBuffer3DMatrix<double>(ViewModelWindow.NumUnity, ViewModelWindow.NumSensor,
 					ViewModelWindow.CircularBufferSize); 
 
+
+                Console.WriteLine(_buffer.Time);
+
 				var t = new int[maxNumberOfSensors];
 				var instant = 0;
 
@@ -117,10 +121,13 @@ namespace MotionDetection.Models
 					}
 
 					// In caso non va settare > 25
+                    
 					if (instant >= ViewModelWindow.StaticBufferSize &&
 					    instant%(ViewModelWindow.CircularBufferSize - ViewModelWindow.StaticBufferSize) == 0)
 					{
-						OnDataReceivedEventHandler?.Invoke(this, new BufferEventArgs<double>
+                        //Console.WriteLine($"time \t {instant} \t bufferSize \t {ViewModelWindow.StaticBufferSize} \t difference \t {ViewModelWindow.CircularBufferSize - ViewModelWindow.StaticBufferSize}");
+
+                        OnDataReceivedEventHandler?.Invoke(this, new BufferEventArgs<double>
 						{
 							Data = _buffer,
 							Time = instant - ViewModelWindow.StaticBufferSize

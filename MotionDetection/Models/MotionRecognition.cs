@@ -11,9 +11,10 @@ namespace MotionDetection.Models
 	{
 		private const double Threshhold = 0.4;
 		private CircularBuffer<int> isMoving;
-		//private DataManipulation DataManpulator { get; set; }
+        int WindowSize = ViewModelWindow.StaticBufferSize / 50 * 11;
+        //private DataManipulation DataManpulator { get; set; }
 
-		public event MovementHadler OnMovement;
+        public event MovementHadler OnMovement;
 
         public event PlotMovementEventHandeler OnPlotMovementEventHandler;
 
@@ -22,7 +23,7 @@ namespace MotionDetection.Models
 			if (data.SeriesType == 0 && data.UnityNumber == 0)
 			{
 				var stdout = DataManipulation.StandardDeviation(data.SensorOne, 11);
-				var medData = SignalProcess.Median(stdout, 31);
+				var medData = SignalProcess.Median(stdout, WindowSize);
 
 				OnPlotMovementEventHandler?.Invoke(this, new SingleDataEventArgs
 				{

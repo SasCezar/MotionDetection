@@ -120,6 +120,7 @@ namespace MotionDetection.ViewModels
 
 		public void ClearPlot()
 		{
+		    SignalProcess.Buffer = null;
 			var numOfSeries = Enum.GetNames(typeof(SeriesType)).Length;
 			for (var i = 0; i < NumUnity; i++)
 			{
@@ -149,23 +150,11 @@ namespace MotionDetection.ViewModels
 
 		public static int[] Frequecy { get; } = {25, 50, 100, 200};
 
-		private static int _staticBufferSize = 50;
+	    public static int StaticBufferSize { get; set; } = 50;
 
-		public static int StaticBufferSize
-		{
-			get { return _staticBufferSize; }
-			set
-			{
-				_staticBufferSize = value;
-			}
-		}
+	    public static int CircularBufferSize => StaticBufferSize*3/2;
 
-		public static int CircularBufferSize
-		{
-			get { return StaticBufferSize*3/2; }
-		}
-
-		public static int NumSensor = 13;
+	    public static int NumSensor = 13;
 		public static int NumUnity = 5;
 	}
 }
