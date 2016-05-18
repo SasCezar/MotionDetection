@@ -72,5 +72,14 @@
                 VerticalAlignment="Top"
                 Command="{Binding ResetCommand}"
                 Content="Clear" />
+        <ComboBox x:Name="comboBox"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Width="120"
+                  Margin="80,310,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  ItemsSource="{Binding Frequecy}"
+                  SelectedValue="{Binding StaticBufferSize}"/>
     </Grid>
 </Window>

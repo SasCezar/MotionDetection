@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using MotionDetection.ViewModels;
 
 namespace MotionDetection.Models
 {
@@ -77,8 +78,8 @@ namespace MotionDetection.Models
 					data.CopyTo(packet, 5); // Copia dei dati
 				}
 
-				_buffer = new CircularBuffer3DMatrix<double>(Parameters.NumUnity, Parameters.NumSensor,
-					Parameters.CircularBufferSize); 
+				_buffer = new CircularBuffer3DMatrix<double>(ViewModelWindow.NumUnity, ViewModelWindow.NumSensor,
+					ViewModelWindow.CircularBufferSize); 
 
 				var t = new int[maxNumberOfSensors];
 				var instant = 0;
@@ -90,10 +91,10 @@ namespace MotionDetection.Models
 						t[x] = 5 + 52*x;
 					}
 
-					for (var unit = 0; unit < Parameters.NumUnity; ++unit)
+					for (var unit = 0; unit < ViewModelWindow.NumUnity; ++unit)
 					{
 						var byteNumber = new byte[4];
-						for (var sensor = 0; sensor < Parameters.NumSensor; ++sensor) // 13 campi, 3 * 3 + 4
+						for (var sensor = 0; sensor < ViewModelWindow.NumSensor; ++sensor) // 13 campi, 3 * 3 + 4
 						{
 							if (numOfUnity < 5)
 							{
@@ -116,13 +117,13 @@ namespace MotionDetection.Models
 					}
 
 					// In caso non va settare > 25
-					if (instant >= Parameters.StaticBufferSize &&
-					    instant%(Parameters.CircularBufferSize - Parameters.StaticBufferSize) == 0)
+					if (instant >= ViewModelWindow.StaticBufferSize &&
+					    instant%(ViewModelWindow.CircularBufferSize - ViewModelWindow.StaticBufferSize) == 0)
 					{
 						OnDataReceivedEventHandler?.Invoke(this, new BufferEventArgs<double>
 						{
 							Data = _buffer,
-							Time = instant - Parameters.StaticBufferSize
+							Time = instant - ViewModelWindow.StaticBufferSize
 						});
 					}
 

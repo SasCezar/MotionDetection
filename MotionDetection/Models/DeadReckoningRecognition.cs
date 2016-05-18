@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using MotionDetection.ViewModels;
 
 namespace MotionDetection.Models
 {
@@ -28,7 +29,7 @@ namespace MotionDetection.Models
             for (int i = 0; i < numOfSlices; ++i)
             {
                 var slice = new ArraySegment<double>(stdDev, i * stdDev.Length/numOfSlices, stdDev.Length/numOfSlices);
-                var distance = slice.Where(p => p > _threshold).Sum();
+                var distance = slice.Where(p => p > _threshold).Sum() / (ViewModelWindow.StaticBufferSize * 8);
                 var angle = eulerAngles[i*stdDev.Length/numOfSlices].Yaw;
                 
                 var sin = Math.Sin(angle);
@@ -39,7 +40,7 @@ namespace MotionDetection.Models
                 x = x + cos*distance;               
                 y = y + sin*distance;
 
-                Console.WriteLine($"distance \t {distance} \t x \t {x} \t y \t {y}");
+                //Console.WriteLine($"distance \t {distance} \t x \t {x} \t y \t {y}");
 
                 xPoints[i] = x;
                 yPoints[i] = y;

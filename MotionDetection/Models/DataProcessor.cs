@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MotionDetection.ViewModels;
 
 namespace MotionDetection.Models
 {
@@ -20,7 +21,7 @@ namespace MotionDetection.Models
 
         public async void ProcessData()
 		{
-			for (var i = 0; i < Parameters.NumUnity; i++)
+			for (var i = 0; i < ViewModelWindow.NumUnity; i++)
 			{
 				var tasks = createTask(i);
 

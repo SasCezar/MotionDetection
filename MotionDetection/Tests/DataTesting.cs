@@ -1,5 +1,6 @@
 ﻿using System;
 using MotionDetection.Models;
+using MotionDetection.ViewModels;
 
 namespace MotionDetection.Tests
 {
@@ -9,7 +10,7 @@ namespace MotionDetection.Tests
 		{
 			var start = eventArgs.Time == 0 ? 0 : 25; 
 			var data = (CircularBuffer3DMatrix<double>)eventArgs.Data;
-			for (var i = start; i < Parameters.StaticBufferSize; i++)
+			for (var i = start; i < ViewModelWindow.StaticBufferSize; i++)
 			{
 				Console.WriteLine(data[0,0,eventArgs.Time + i]);
 			}

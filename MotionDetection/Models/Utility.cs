@@ -64,10 +64,6 @@ namespace MotionDetection.Models
 
 	public static class Parameters
 	{
-		public static int CircularBufferSize = 75;
-		public static int NumSensor = 13;
-		public static int StaticBufferSize = CircularBufferSize*2/3;
-		public static int NumUnity = 5;
 	}
 
 	public static class Utils

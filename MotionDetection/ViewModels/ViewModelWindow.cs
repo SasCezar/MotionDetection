@@ -29,7 +29,7 @@ namespace MotionDetection.ViewModels
 			DeadReckoningLineSeries = new LineSeries();
 
 
-			for (var i = 0; i < Parameters.NumUnity; i++)
+			for (var i = 0; i < NumUnity; i++)
 			{
 				SensorsModels[i] = new PlotModel
 				{
@@ -96,7 +96,7 @@ namespace MotionDetection.ViewModels
 
 		public void OnDataProcessed(object sender, SingleDataEventArgs singleArgs)
 		{
-			var start = singleArgs.Time < 25 ? 0 : singleArgs.SensorOne.Length/2;
+			var start = singleArgs.Time < StaticBufferSize/2 ? 0 : singleArgs.SensorOne.Length/2;
 			for (var i = start; i < singleArgs.SensorOne.Length; i++)
 			{
 				var value = singleArgs.SensorOne[i];
@@ -121,7 +121,7 @@ namespace MotionDetection.ViewModels
 		public void ClearPlot()
 		{
 			var numOfSeries = Enum.GetNames(typeof(SeriesType)).Length;
-			for (var i = 0; i < Parameters.NumUnity; i++)
+			for (var i = 0; i < NumUnity; i++)
 			{
 				SensorsModels[i].Series.Clear();
                 DeadReckoningModels.Series.Clear();
@@ -146,5 +146,26 @@ namespace MotionDetection.ViewModels
             DeadReckoningModels.Series.Add(DeadReckoningLineSeries);
             DeadReckoningModels.InvalidatePlot(true);
         }
+
+		public static int[] Frequecy { get; } = {25, 50, 100, 200};
+
+		private static int _staticBufferSize = 50;
+
+		public static int StaticBufferSize
+		{
+			get { return _staticBufferSize; }
+			set
+			{
+				_staticBufferSize = value;
+			}
+		}
+
+		public static int CircularBufferSize
+		{
+			get { return StaticBufferSize*3/2; }
+		}
+
+		public static int NumSensor = 13;
+		public static int NumUnity = 5;
 	}
 }

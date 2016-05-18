@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using MotionDetection.ViewModels;
 
 namespace MotionDetection.Models
 {
@@ -12,13 +13,17 @@ namespace MotionDetection.Models
 
 		public SignalProcess()
 		{
-			Buffer = new Buffer3DMatrix<double>(Parameters.NumUnity, Parameters.NumSensor, Parameters.StaticBufferSize);
+			
 		}
 
 		public event SignalProcessedEventHandeler OnSignalProcessedEventHandler;
 
 		public void Smoothing(CircularBuffer3DMatrix<double> circularBuffer, int windowStartTime)
 		{
+			if (Buffer == null)
+			{
+				Buffer = new Buffer3DMatrix<double>(ViewModelWindow.NumUnity, ViewModelWindow.NumSensor, ViewModelWindow.StaticBufferSize);
+			}
 			for (var i = 0; i < Buffer.UnityNumber; i++)
 			{
 				for (var j = 0; j < Buffer.SensorType; j++)
@@ -27,7 +32,7 @@ namespace MotionDetection.Models
 					{
 						var sum = 0.0;
 						var start = Utils.FirstIndex(windowStartTime + k, WindowSize);
-						var stop = Utils.LastIndex(windowStartTime + k, WindowSize, windowStartTime + Parameters.StaticBufferSize);
+						var stop = Utils.LastIndex(windowStartTime + k, WindowSize, windowStartTime + ViewModelWindow.StaticBufferSize);
 
 						for (var h = start; h <= stop; ++h)
 						{

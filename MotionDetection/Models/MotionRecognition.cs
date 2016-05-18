@@ -1,4 +1,5 @@
 ﻿using System;
+using MotionDetection.ViewModels;
 
 namespace MotionDetection.Models
 {
@@ -9,7 +10,7 @@ namespace MotionDetection.Models
 	public class MotionRecognition
 	{
 		private const double Threshhold = 0.4;
-		private CircularBuffer<int> isMoving = new CircularBuffer<int>(Parameters.CircularBufferSize);
+		private CircularBuffer<int> isMoving;
 		//private DataManipulation DataManpulator { get; set; }
 
 		public event MovementHadler OnMovement;
@@ -39,6 +40,10 @@ namespace MotionDetection.Models
 
 		public void RecognizeStatus(double[] std, int startTime)
 		{
+			if (isMoving == null)
+			{
+				isMoving = new CircularBuffer<int>(ViewModelWindow.CircularBufferSize);
+			}
 			var i = startTime;
 			foreach (var data in std)
 			{
@@ -56,7 +61,7 @@ namespace MotionDetection.Models
 		protected void PrintMovements(object sender, MotionEventArgs args)
 		{
 			var start = args.Time;
-			var finish = start + Parameters.StaticBufferSize;
+			var finish = start + ViewModelWindow.StaticBufferSize;
 			for (var i = start; i < finish; ++i)
 			{
 				var status = args.MotionData[i]==1 ? "Movimento" : "Fermo";

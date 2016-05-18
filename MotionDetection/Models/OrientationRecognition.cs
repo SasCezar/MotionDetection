@@ -1,4 +1,5 @@
 using System;
+using MotionDetection.ViewModels;
 
 namespace MotionDetection.Models
 {
@@ -7,8 +8,8 @@ namespace MotionDetection.Models
     public class OrientationRecognition
     {
         private int _time;
-        private double[] _cumulatedResult = new double[Parameters.NumUnity];
-        private double[] _intraWindowRadians = new double[Parameters.NumUnity];
+        private double[] _cumulatedResult = new double[ViewModelWindow.NumUnity];
+        private double[] _intraWindowRadians = new double[ViewModelWindow.NumUnity];
         private int _unityNumber;
  
         public event PlotOrientationHandeler OnPlotOrientation;
