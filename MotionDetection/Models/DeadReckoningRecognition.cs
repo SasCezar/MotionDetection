@@ -37,8 +37,8 @@ namespace MotionDetection.Models
 
 
 
-                x = x + cos*distance;               
-                y = y + sin*distance;
+                x = x + sin*distance;               
+                y = y + cos*distance;
 
                 //Console.WriteLine($"distance \t {distance} \t x \t {x} \t y \t {y}");
 

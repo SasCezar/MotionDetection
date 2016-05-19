@@ -17,7 +17,7 @@ namespace MotionDetection.Models
         public static int[] IsTurning;
         private string FilePath;
         public int Time { get; set; }
-        DateTime printStartTime;
+        TimeSpan printStartTime;
 
         public Printer(string filePath)
         {
@@ -28,44 +28,38 @@ namespace MotionDetection.Models
         {
             CsvFile = new StringBuilder();
             var start = Time < ViewModelWindow.StaticBufferSize / 2 ? 0 : IsMoving.Length / 2;
-            for (int i = 0; i < IsMoving.Length; ++i)
+            for (int i = start; i < IsMoving.Length; ++i)
             {
-                if (Time + i == 0 || IsMoving[i] != IsMoving[i - 1] || IsTurning[i] != IsTurning[i - 1] ||
+                if (i == 0 || IsMoving[i] != IsMoving[i - 1] || IsTurning[i] != IsTurning[i - 1] ||
                     Posture[i] != Posture[i - 1])
                 {
                     var moving = ((Motion)IsMoving[i]).ToString();
                     var turning = ((Turning)IsTurning[i]).ToString();
-                    var posture = ((Posture)Posture[i]).ToString();
+                    var posture = ((Posture)Posture[i]).ToString(); 
 
-                    Console.WriteLine($"start time \t {printStartTime} \t total seconds \t {(DateTime.Now.TimeOfDay - printStartTime)}");
-                    
-
-                    if (Time + i == 0 || (DateTime.Now.TimeOfDay - printStartTime).TotalSeconds > 0.5)
-                    {
-                        var printFinishTime = DateTime.Now.TimeOfDay;
-                        string record = $"{printStartTime.ToString("hh\\:mm\\:ss")}, {printFinishTime.ToString("hh\\:mm\\:ss")}, {moving}, {posture}, {turning}";
-
-                        printStartTime = printFinishTime;
-
-                        CsvFile.AppendLine(record);
-                    }
+                    var printFinishTime = DateTime.Now.TimeOfDay;
+                    string record = $"{printStartTime.ToString("hh\\:mm\\:ss")}, {printFinishTime.ToString("hh\\:mm\\:ss")}, {moving}, {posture}, {turning}";
+       
+                    printStartTime = printFinishTime;
+                    CsvFile.AppendLine(record);
                    
                 }               
             }
             File.AppendAllText(FilePath, CsvFile.ToString());
         }
 
+
         public void OnDataAnalyzed(object sender, MultipleDataEventArgs args)
         {
             if (args.Time == 0)
             {
-                = DateTime.Now.TimeOfDay
+               printStartTime = DateTime.Now.TimeOfDay;
             }
             Time = args.Time;
             PrintLog();
         }
     }
-
+    
     
 
     public enum Motion
