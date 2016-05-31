@@ -23,7 +23,7 @@ namespace MotionDetection
             var deadReckoningRecognizer = new DeadReckoningRecognition();
 			var viewModel = new ViewModelWindow(command, resetCommand);
 			var form = new MainWindow(viewModel);
-            var printer = new Printer("C:\\Users\\Ilaria\\Desktop\\motionLog.csv");
+            var printer = new Printer("C:\\Users\\Cezar Sas\\Desktop\\motionLog.csv");
 
 			resetCommand.ViewModel = viewModel;
 

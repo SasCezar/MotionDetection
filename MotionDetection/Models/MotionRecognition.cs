@@ -42,7 +42,7 @@ namespace MotionDetection.Models
 
 		public void RecognizeStatus(double[] std, int startTime)
 		{
-			if (isMoving == null)
+			if (startTime == 0) 
 			{
 				isMoving = new int[ViewModelWindow.StaticBufferSize];
 			}

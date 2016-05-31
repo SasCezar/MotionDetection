@@ -21,7 +21,7 @@ namespace MotionDetection.Models
         public double[] RecognizeDeadReckoning(double[] stdDev, double[] posture, EulerAngles[] eulerAngles)
         {
             var result = new double[stdDev.Length];
-            var numOfSlices = 25;
+            var numOfSlices = ViewModelWindow.StaticBufferSize / 2;
 
             var xPoints = new double[numOfSlices];
             var yPoints = new double[numOfSlices];
