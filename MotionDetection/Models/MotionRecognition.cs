@@ -12,7 +12,7 @@ namespace MotionDetection.Models
 		private const double Threshhold = 0.4;
 		//private CircularBuffer<int> isMoving;
         int WindowSize = ViewModelWindow.StaticBufferSize / 50 * 11;
-        private int[] isMoving = new int[ViewModelWindow.StaticBufferSize];
+        private int[] isMoving;
         //private DataManipulation DataManpulator { get; set; }
 
         public event MovementHadler OnMovement;
@@ -42,10 +42,10 @@ namespace MotionDetection.Models
 
 		public void RecognizeStatus(double[] std, int startTime)
 		{
-			//if (isMoving == null)
-			//{
-			//	isMoving = new CircularBuffer<int>(ViewModelWindow.CircularBufferSize);
-			//}
+			if (isMoving == null)
+			{
+				isMoving = new int[ViewModelWindow.StaticBufferSize];
+			}
 			var i = 0;
 			foreach (var data in std)
 			{
